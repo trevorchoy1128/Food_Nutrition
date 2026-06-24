@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" style="overflow-x:hidden">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSE 體育：健康鏡子與天才醫生學院</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media (min-width: 480px) {
+            .xs\:inline { display: inline; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out both; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        .badge-locked { filter: grayscale(1) opacity(0.4); }
+        .badge-unlocked { filter: none; }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        .bar-fill { transition: width 0.8s ease-out; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans">
+
+    <header class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+            <div class="min-w-0">
+                <h1 class="text-base sm:text-lg font-bold flex items-center gap-2 leading-tight">
+                    <i class="fa-solid fa-heart-pulse text-rose-300 shrink-0"></i>
+                    <span class="truncate">DSE PE 營養學平台</span>
+                </h1>
+                <p class="text-emerald-200 text-xs mt-0.5 hidden sm:block">維他命、礦物質與健康飲食分析</p>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+                <div class="bg-black/20 p-1 rounded-xl flex gap-1">
+                    <button id="tab-btn-1" onclick="switchTab(1)" class="px-3 py-1.5 rounded-lg font-semibold transition-all duration-200 bg-white text-emerald-900 shadow text-xs sm:text-sm whitespace-nowrap">
+                        <i class="fa-solid fa-mirror mr-1"></i><span class="hidden xs:inline">健康</span>鏡子
+                    </button>
+                    <button id="tab-btn-2" onclick="switchTab(2)" class="px-3 py-1.5 rounded-lg font-semibold transition-all duration-200 text-emerald-100 hover:bg-white/20 text-xs sm:text-sm whitespace-nowrap">
+                        <i class="fa-solid fa-user-secret mr-1"></i><span class="hidden xs:inline">天才</span>醫生
+                    </button>
+                </div>
+                <button onclick="openApiSettings()" class="text-emerald-200 hover:text-white transition p-2 rounded-lg hover:bg-white/20" title="Gemini API 設定">
+                    <i class="fa-solid fa-key text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-3 sm:px-4 py-5 w-full flex-1">
+
+        <!-- ═══════════════════════════════ TAB 1 ═══════════════════════════════ -->
+        <section id="tab-content-1" class="space-y-5 pb-10">
+            <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+
+                <!-- Hero banner -->
+                <div class="aspect-[16/5] sm:aspect-[16/6] w-full overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1200&q=80"
+                         alt="健康飲食" class="w-full h-full object-cover" loading="lazy"
+                         onerror="this.parentElement.style.display='none'">
+                </div>
+
+                <div class="p-4 sm:p-6">
+                    <div class="border-b border-slate-100 pb-3 mb-5">
+                        <h2 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-mirror text-emerald-600"></i> 我的健康鏡子
+                        </h2>
+                        <p class="text-slate-500 text-xs sm:text-sm mt-1">紀錄連續兩日飲食，深度分析維他命與礦物質攝取情況。</p>
+                    </div>
+
+                    <!-- BMI Calculator (collapsible) -->
+                    <details class="mb-6 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl border border-emerald-100">
+                        <summary class="flex items-center justify-between px-5 py-4 cursor-pointer select-none">
+                            <span class="font-bold text-emerald-900 flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-calculator text-emerald-600"></i> 第一步：計算個人基礎資料（BMI & 每日所需能量）
+                            </span>
+                            <i class="fa-solid fa-chevron-down text-emerald-500 text-xs transition-transform details-arrow"></i>
+                        </summary>
+                        <div class="px-5 pb-5 pt-1">
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mb-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">身高 (cm)</label>
+                                    <input id="bmi-height" type="number" placeholder="170" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">體重 (kg)</label>
+                                    <input id="bmi-weight" type="number" placeholder="60" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">年齡</label>
+                                    <input id="bmi-age" type="number" placeholder="17" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">性別</label>
+                                    <select id="bmi-gender" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                        <option value="male">男</option>
+                                        <option value="female">女</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-600 mb-1">活動水平</label>
+                                    <select id="bmi-pal" class="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                        <option value="1.2">久坐（少活動）</option>
+                                        <option value="1.375">輕度（每週1-3天）</option>
+                                        <option value="1.55" selected>中度（每週3-5天）</option>
+                                        <option value="1.725">高度（每週6-7天）</option>
+                                        <option value="1.9">極高（運動員）</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onclick="calculateProfile()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-5 py-2 rounded-lg transition flex items-center gap-2">
+                                <i class="fa-solid fa-calculator"></i> 計算我的數據
+                            </button>
+                            <div id="bmi-result" class="hidden mt-4 flex flex-wrap gap-3">
+                                <div class="bg-white rounded-xl border border-emerald-200 px-4 py-3 text-center">
+                                    <div class="text-xs text-slate-500 mb-0.5">BMI 指數</div>
+                                    <div id="bmi-value" class="text-2xl font-bold text-emerald-700">—</div>
+                                    <div id="bmi-category" class="text-xs font-bold mt-0.5">—</div>
+                                </div>
+                                <div class="bg-white rounded-xl border border-teal-200 px-4 py-3 text-center">
+                                    <div class="text-xs text-slate-500 mb-0.5">每日建議能量攝取</div>
+                                    <div id="tdee-value" class="text-2xl font-bold text-teal-700">—</div>
+                                    <div class="text-xs text-slate-500">千卡 / 天</div>
+                                </div>
+                                <div id="bmi-advice" class="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-800 flex-1 min-w-[200px] flex items-center gap-2">
+                                    <i class="fa-solid fa-circle-info text-amber-500"></i>
+                                    <span id="bmi-advice-text"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Meal Input Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Day 1 -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/60 border-l-4 border-l-emerald-400">
+                            <h3 class="font-bold text-emerald-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-calendar-day"></i> 第一天飲食紀錄</h3>
+                            <div class="space-y-4">
+                                <!-- Breakfast -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=128&h=128&fit=crop" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0 mt-1" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1"><i class="fa-solid fa-sun text-amber-400"></i>早餐</label>
+                                            <button onclick="triggerPhoto('d1','breakfast')" class="text-slate-400 hover:text-emerald-600 transition text-xs flex items-center gap-1"><i class="fa-solid fa-camera"></i> 拍照</button>
+                                        </div>
+                                        <input type="file" id="photo-d1-breakfast" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto('d1','breakfast',this)">
+                                        <div id="photo-preview-d1-breakfast" class="hidden mb-2"></div>
+                                        <div id="pills-d1-breakfast" class="flex flex-wrap gap-1.5 min-h-[28px] mb-1.5"></div>
+                                        <div class="flex gap-1.5">
+                                            <input type="text" id="fi-d1-breakfast" placeholder="輸入或點選食物…" oninput="autoUnit('d1','breakfast');showFoodPanel('d1','breakfast')" onfocus="showFoodPanel('d1','breakfast')" class="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400 hover:border-emerald-200 transition">
+                                            <input type="number" id="fq-d1-breakfast" min="0.5" step="0.5" value="1" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                            <select id="fu-d1-breakfast" class="w-14 bg-white border border-slate-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                                <option>個</option><option>隻</option><option>條</option><option>碗</option><option>杯</option><option>份</option><option>片</option><option>塊</option><option>件</option><option>包</option><option>罐</option><option>克</option><option>粒</option>
+                                            </select>
+                                            <button onclick="addFoodItem('d1','breakfast')" class="bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-bold transition shrink-0"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Lunch -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=128&h=128&fit=crop" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0 mt-1" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1"><i class="fa-solid fa-cloud-sun text-sky-400"></i>午餐</label>
+                                            <button onclick="triggerPhoto('d1','lunch')" class="text-slate-400 hover:text-emerald-600 transition text-xs flex items-center gap-1"><i class="fa-solid fa-camera"></i> 拍照</button>
+                                        </div>
+                                        <input type="file" id="photo-d1-lunch" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto('d1','lunch',this)">
+                                        <div id="photo-preview-d1-lunch" class="hidden mb-2"></div>
+                                        <div id="pills-d1-lunch" class="flex flex-wrap gap-1.5 min-h-[28px] mb-1.5"></div>
+                                        <div class="flex gap-1.5">
+                                            <input type="text" id="fi-d1-lunch" placeholder="輸入或點選食物…" oninput="autoUnit('d1','lunch');showFoodPanel('d1','lunch')" onfocus="showFoodPanel('d1','lunch')" class="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400 hover:border-emerald-200 transition">
+                                            <input type="number" id="fq-d1-lunch" min="0.5" step="0.5" value="1" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                            <select id="fu-d1-lunch" class="w-14 bg-white border border-slate-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                                <option>個</option><option>隻</option><option>條</option><option>碗</option><option>杯</option><option>份</option><option>片</option><option>塊</option><option>件</option><option>包</option><option>罐</option><option>克</option><option>粒</option>
+                                            </select>
+                                            <button onclick="addFoodItem('d1','lunch')" class="bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-bold transition shrink-0"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Dinner -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=128&h=128&fit=crop" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0 mt-1" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1"><i class="fa-solid fa-moon text-indigo-400"></i>晚餐</label>
+                                            <button onclick="triggerPhoto('d1','dinner')" class="text-slate-400 hover:text-emerald-600 transition text-xs flex items-center gap-1"><i class="fa-solid fa-camera"></i> 拍照</button>
+                                        </div>
+                                        <input type="file" id="photo-d1-dinner" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto('d1','dinner',this)">
+                                        <div id="photo-preview-d1-dinner" class="hidden mb-2"></div>
+                                        <div id="pills-d1-dinner" class="flex flex-wrap gap-1.5 min-h-[28px] mb-1.5"></div>
+                                        <div class="flex gap-1.5">
+                                            <input type="text" id="fi-d1-dinner" placeholder="輸入或點選食物…" oninput="autoUnit('d1','dinner');showFoodPanel('d1','dinner')" onfocus="showFoodPanel('d1','dinner')" class="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400 hover:border-emerald-200 transition">
+                                            <input type="number" id="fq-d1-dinner" min="0.5" step="0.5" value="1" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                            <select id="fu-d1-dinner" class="w-14 bg-white border border-slate-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                                <option>個</option><option>隻</option><option>條</option><option>碗</option><option>杯</option><option>份</option><option>片</option><option>塊</option><option>件</option><option>包</option><option>罐</option><option>克</option><option>粒</option>
+                                            </select>
+                                            <button onclick="addFoodItem('d1','dinner')" class="bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-bold transition shrink-0"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Snack -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=128&h=128&fit=crop" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0 mt-1" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1"><i class="fa-solid fa-cookie-bite text-orange-400"></i>小食 / 飲料</label>
+                                            <button onclick="triggerPhoto('d1','snack')" class="text-slate-400 hover:text-emerald-600 transition text-xs flex items-center gap-1"><i class="fa-solid fa-camera"></i> 拍照</button>
+                                        </div>
+                                        <input type="file" id="photo-d1-snack" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto('d1','snack',this)">
+                                        <div id="photo-preview-d1-snack" class="hidden mb-2"></div>
+                                        <div id="pills-d1-snack" class="flex flex-wrap gap-1.5 min-h-[28px] mb-1.5"></div>
+                                        <div class="flex gap-1.5">
+                                            <input type="text" id="fi-d1-snack" placeholder="輸入或點選食物…" oninput="autoUnit('d1','snack');showFoodPanel('d1','snack')" onfocus="showFoodPanel('d1','snack')" class="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400 hover:border-emerald-200 transition">
+                                            <input type="number" id="fq-d1-snack" min="0.5" step="0.5" value="1" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                            <select id="fu-d1-snack" class="w-14 bg-white border border-slate-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                                                <option>個</option><option>隻</option><option>條</option><option>碗</option><option>杯</option><option>份</option><option>片</option><option>塊</option><option>件</option><option>包</option><option>罐</option><option>克</option><option>粒</option>
+                                            </select>
+                                            <button onclick="addFoodItem('d1','snack')" class="bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-bold transition shrink-0"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Day 2 -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200/60 border-l-4 border-l-teal-400">
+                            <h3 class="font-bold text-teal-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-calendar-day"></i> 第二天飲食紀錄</h3>
+                            <div class="space-y-4">
+                                <!-- Breakfast -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=128&h=128&fit=crop" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0 mt-1" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1"><i class="fa-solid fa-sun text-amber-400"></i>早餐</label>
+                                            <button onclick="triggerPhoto('d2','breakfast')" class="text-slate-400 hover:text-teal-600 transition text-xs flex items-center gap-1"><i class="fa-solid fa-camera"></i> 拍照</button>
+                                        </div>
+                                        <input type="file" id="photo-d2-breakfast" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto('d2','breakfast',this)">
+                                        <div id="photo-preview-d2-breakfast" class="hidden mb-2"></div>
+                                        <div id="pills-d2-breakfast" class="flex flex-wrap gap-1.5 min-h-[28px] mb-1.5"></div>
+                                        <div class="flex gap-1.5">
+                                            <input type="text" id="fi-d2-breakfast" placeholder="輸入或點選食物…" oninput="autoUnit('d2','breakfast');showFoodPanel('d2','breakfast')" onfocus="showFoodPanel('d2','breakfast')" class="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400 hover:border-teal-200 transition">
+                                            <input type="number" id="fq-d2-breakfast" min="0.5" step="0.5" value="1" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                            <select id="fu-d2-breakfast" class="w-14 bg-white border border-slate-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                                <option>個</option><option>隻</option><option>條</option><option>碗</option><option>杯</option><option>份</option><option>片</option><option>塊</option><option>件</option><option>包</option><option>罐</option><option>克</option><option>粒</option>
+                                            </select>
+                                            <button onclick="addFoodItem('d2','breakfast')" class="bg-teal-500 hover:bg-teal-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-bold transition shrink-0"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Lunch -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=128&h=128&fit=crop" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0 mt-1" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1"><i class="fa-solid fa-cloud-sun text-sky-400"></i>午餐</label>
+                                            <button onclick="triggerPhoto('d2','lunch')" class="text-slate-400 hover:text-teal-600 transition text-xs flex items-center gap-1"><i class="fa-solid fa-camera"></i> 拍照</button>
+                                        </div>
+                                        <input type="file" id="photo-d2-lunch" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto('d2','lunch',this)">
+                                        <div id="photo-preview-d2-lunch" class="hidden mb-2"></div>
+                                        <div id="pills-d2-lunch" class="flex flex-wrap gap-1.5 min-h-[28px] mb-1.5"></div>
+                                        <div class="flex gap-1.5">
+                                            <input type="text" id="fi-d2-lunch" placeholder="輸入或點選食物…" oninput="autoUnit('d2','lunch');showFoodPanel('d2','lunch')" onfocus="showFoodPanel('d2','lunch')" class="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400 hover:border-teal-200 transition">
+                                            <input type="number" id="fq-d2-lunch" min="0.5" step="0.5" value="1" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                            <select id="fu-d2-lunch" class="w-14 bg-white border border-slate-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                                <option>個</option><option>隻</option><option>條</option><option>碗</option><option>杯</option><option>份</option><option>片</option><option>塊</option><option>件</option><option>包</option><option>罐</option><option>克</option><option>粒</option>
+                                            </select>
+                                            <button onclick="addFoodItem('d2','lunch')" class="bg-teal-500 hover:bg-teal-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-bold transition shrink-0"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Dinner -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=128&h=128&fit=crop" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0 mt-1" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1"><i class="fa-solid fa-moon text-indigo-400"></i>晚餐</label>
+                                            <button onclick="triggerPhoto('d2','dinner')" class="text-slate-400 hover:text-teal-600 transition text-xs flex items-center gap-1"><i class="fa-solid fa-camera"></i> 拍照</button>
+                                        </div>
+                                        <input type="file" id="photo-d2-dinner" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto('d2','dinner',this)">
+                                        <div id="photo-preview-d2-dinner" class="hidden mb-2"></div>
+                                        <div id="pills-d2-dinner" class="flex flex-wrap gap-1.5 min-h-[28px] mb-1.5"></div>
+                                        <div class="flex gap-1.5">
+                                            <input type="text" id="fi-d2-dinner" placeholder="輸入或點選食物…" oninput="autoUnit('d2','dinner');showFoodPanel('d2','dinner')" onfocus="showFoodPanel('d2','dinner')" class="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400 hover:border-teal-200 transition">
+                                            <input type="number" id="fq-d2-dinner" min="0.5" step="0.5" value="1" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                            <select id="fu-d2-dinner" class="w-14 bg-white border border-slate-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                                <option>個</option><option>隻</option><option>條</option><option>碗</option><option>杯</option><option>份</option><option>片</option><option>塊</option><option>件</option><option>包</option><option>罐</option><option>克</option><option>粒</option>
+                                            </select>
+                                            <button onclick="addFoodItem('d2','dinner')" class="bg-teal-500 hover:bg-teal-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-bold transition shrink-0"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Snack -->
+                                <div class="flex items-start gap-3">
+                                    <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=128&h=128&fit=crop" class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl object-cover shrink-0 mt-1" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between mb-1.5">
+                                            <label class="text-xs font-bold text-slate-600 flex items-center gap-1"><i class="fa-solid fa-cookie-bite text-orange-400"></i>小食 / 飲料</label>
+                                            <button onclick="triggerPhoto('d2','snack')" class="text-slate-400 hover:text-teal-600 transition text-xs flex items-center gap-1"><i class="fa-solid fa-camera"></i> 拍照</button>
+                                        </div>
+                                        <input type="file" id="photo-d2-snack" accept="image/*" capture="environment" class="hidden" onchange="handlePhoto('d2','snack',this)">
+                                        <div id="photo-preview-d2-snack" class="hidden mb-2"></div>
+                                        <div id="pills-d2-snack" class="flex flex-wrap gap-1.5 min-h-[28px] mb-1.5"></div>
+                                        <div class="flex gap-1.5">
+                                            <input type="text" id="fi-d2-snack" placeholder="輸入或點選食物…" oninput="autoUnit('d2','snack');showFoodPanel('d2','snack')" onfocus="showFoodPanel('d2','snack')" class="flex-1 min-w-0 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400 hover:border-teal-200 transition">
+                                            <input type="number" id="fq-d2-snack" min="0.5" step="0.5" value="1" class="w-14 bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-center focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                            <select id="fu-d2-snack" class="w-14 bg-white border border-slate-200 rounded-lg px-1 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-teal-400">
+                                                <option>個</option><option>隻</option><option>條</option><option>碗</option><option>杯</option><option>份</option><option>片</option><option>塊</option><option>件</option><option>包</option><option>罐</option><option>克</option><option>粒</option>
+                                            </select>
+                                            <button onclick="addFoodItem('d2','snack')" class="bg-teal-500 hover:bg-teal-600 text-white rounded-lg px-2.5 py-1.5 text-xs font-bold transition shrink-0"><i class="fa-solid fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 flex justify-center">
+                        <button id="scan-btn" onclick="simulateAnalysis()" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-8 py-3 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> 送出給 AI 深度掃描
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="mirror-result" class="hidden space-y-6 animate-fade-in-up">
+
+                <!-- Nutrient Report Card (Change 5) -->
+                <div id="nutrient-report-card" class="bg-white rounded-2xl shadow-md border border-slate-200 p-6">
+                    <h3 class="font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3 mb-4">
+                        <i class="fa-solid fa-flask-vial text-violet-600"></i> 維他命與礦物質攝取分析
+                    </h3>
+                    <div id="nutrient-table-wrap" class="overflow-x-auto">
+                        <p class="text-slate-400 text-xs italic">記錄飲食後按下「送出給 AI 深度掃描」，此處將顯示每種食物的維他命及礦物質含量分析。</p>
+                    </div>
+                </div>
+
+                <!-- AI Report Card -->
+                    <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6 space-y-4">
+                        <h3 class="font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3"><i class="fa-solid fa-comment-medical text-emerald-600"></i> AI 健康分析師報告</h3>
+                        <div class="space-y-3 text-sm leading-relaxed text-slate-600">
+
+                            <!-- 總結語 (dynamic) -->
+                            <p id="ai-summary-banner" class="font-bold text-amber-600 bg-amber-50 px-3 py-2.5 rounded-xl flex items-start gap-2"><i class="fa-solid fa-triangle-exclamation mt-0.5"></i><span>總結語：請先記錄飲食並按下「送出給 AI 深度掃描」。</span></p>
+
+                            <!-- 微量元素警訊 (dynamic) -->
+                            <div id="ai-nutrient-warning" class="bg-rose-50 rounded-xl p-3 border border-rose-100">
+                                <p class="font-bold text-rose-700 text-xs mb-1.5 flex items-center gap-1"><i class="fa-solid fa-flask text-rose-500"></i> 微量元素警訊</p>
+                                <p class="text-xs text-rose-800">完成掃描後，此處將根據你的實際飲食顯示缺乏的維生素及礦物質。</p>
+                            </div>
+
+                            <!-- 疾病風險提示 (static) -->
+                            <div class="bg-orange-50 rounded-xl p-3 border border-orange-100">
+                                <p class="font-bold text-orange-700 text-xs mb-1.5 flex items-center gap-1"><i class="fa-solid fa-heart-crack text-orange-500"></i> 疾病風險提示</p>
+                                <p class="text-xs text-orange-800">長期缺乏多種維生素及礦物質，會增加患上<strong>非傳染性疾病</strong>（如骨質疏鬆、貧血、心臟病）的風險，及早調整飲食結構最為重要。</p>
+                            </div>
+
+                            <!-- 建議行動方針 (dynamic) -->
+                            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-100 space-y-2">
+                                <h4 class="font-bold text-emerald-900 text-xs flex items-center gap-1"><i class="fa-solid fa-clipboard-check"></i> 建議行動方針</h4>
+                                <ul id="ai-action-items" class="list-none space-y-1.5 text-xs text-emerald-900">
+                                    <li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-500 mt-0.5 shrink-0"></i><span>完成掃描後，此處將顯示針對你飲食的個人化行動建議。</span></li>
+                                </ul>
+                            </div>
+
+                            <!-- 建議飲食方針 (dynamic, hidden until scan) -->
+                            <div id="ai-diet-guide" class="hidden">
+                                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
+                                    <h4 class="font-bold text-indigo-900 text-xs flex items-center gap-1 mb-3">
+                                        <i class="fa-solid fa-utensils text-indigo-500"></i> 個人化建議飲食方針
+                                    </h4>
+                                    <div id="ai-diet-guide-content" class="space-y-2.5"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                <!-- Lifestyle Pledge -->
+                <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-6">
+                    <h3 class="font-bold text-slate-900 flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+                        <i class="fa-solid fa-scroll text-amber-500"></i> 健康生活模式約章（P-I-E 反思活動）
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                            <div class="text-xs font-bold text-blue-700 mb-2 flex items-center gap-1"><i class="fa-solid fa-p text-blue-500"></i> P — 策劃 (Plan)</div>
+                            <textarea placeholder="我承諾改變以下飲食習慣：&#10;例：每天增加兩份蔬果..." class="w-full bg-white border border-blue-200 rounded-lg p-2.5 text-xs resize-none h-24 focus:outline-none focus:ring-2 focus:ring-blue-300"></textarea>
+                        </div>
+                        <div class="bg-violet-50 rounded-xl p-4 border border-violet-100">
+                            <div class="text-xs font-bold text-violet-700 mb-2 flex items-center gap-1"><i class="fa-solid fa-i text-violet-500"></i> I — 實施 (Implement)</div>
+                            <textarea placeholder="我今天的運動計劃：&#10;WHO建議：每天累計60分鐘中等至劇烈強度體能活動&#10;例：放學後慢跑30分鐘..." class="w-full bg-white border border-violet-200 rounded-lg p-2.5 text-xs resize-none h-24 focus:outline-none focus:ring-2 focus:ring-violet-300"></textarea>
+                        </div>
+                        <div class="bg-emerald-50 rounded-xl p-4 border border-emerald-100">
+                            <div class="text-xs font-bold text-emerald-700 mb-2 flex items-center gap-1"><i class="fa-solid fa-e text-emerald-500"></i> E — 評鑑 (Evaluate)</div>
+                            <textarea placeholder="一週後我將評估：&#10;例：體能狀態有否改善？飲食習慣有否達標？" class="w-full bg-white border border-emerald-200 rounded-lg p-2.5 text-xs resize-none h-24 focus:outline-none focus:ring-2 focus:ring-emerald-300"></textarea>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <button onclick="savePledge()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-5 py-2 rounded-lg transition flex items-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> 儲存我的約章
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════ TAB 2 ═══════════════════════════════ -->
+        <section id="tab-content-2" class="hidden space-y-5 pb-10">
+            <div class="bg-white rounded-2xl shadow-md border border-slate-200 p-4 sm:p-6">
+                <div class="border-b border-slate-100 pb-3 mb-4">
+                    <h2 class="text-lg sm:text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-user-secret text-indigo-600"></i> 天才醫生學院
+                    </h2>
+                    <p class="text-slate-500 text-xs sm:text-sm mt-1">解謎神秘病歷，辨認營養缺乏症狀，規劃康復菜單與 P-I-E 冒險約章。</p>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="mb-5">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-slate-600"><i class="fa-solid fa-trophy text-amber-400 mr-1"></i>診斷進度</span>
+                        <span id="progress-text" class="text-xs font-bold text-indigo-600">0 / 8 個案已完成</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                        <div id="progress-bar" class="bar-fill h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Case Navigation -->
+                <div id="case-nav" class="flex gap-2 overflow-x-auto scrollbar-hide pb-2 mb-5 -mx-1 px-1">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- Badge Row -->
+                <div class="flex flex-wrap gap-3 mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                    <div class="text-xs font-bold text-slate-500 w-full flex items-center gap-1 mb-1"><i class="fa-solid fa-medal text-amber-400"></i> 成就徽章</div>
+                    <div id="badge-1024" class="badge-locked flex flex-col items-center gap-1 cursor-default select-none">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center border-2 border-yellow-200">
+                            <i class="fa-solid fa-lemon text-yellow-500 text-lg"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium">維C守護者</span>
+                    </div>
+                    <div id="badge-2048" class="badge-locked flex flex-col items-center gap-1 cursor-default select-none">
+                        <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center border-2 border-slate-200">
+                            <i class="fa-solid fa-bone text-slate-500 text-lg"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium">鈣質衞士</span>
+                    </div>
+                    <div id="badge-3072" class="badge-locked flex flex-col items-center gap-1 cursor-default select-none">
+                        <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center border-2 border-rose-200">
+                            <i class="fa-solid fa-droplet text-rose-500 text-lg"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium">天才醫生</span>
+                    </div>
+                    <div id="badge-4096" class="badge-locked flex flex-col items-center gap-1 cursor-default select-none">
+                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center border-2 border-orange-200">
+                            <i class="fa-solid fa-eye text-orange-500 text-lg"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium">夜視英雄</span>
+                    </div>
+                    <div id="badge-5120" class="badge-locked flex flex-col items-center gap-1 cursor-default select-none">
+                        <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center border-2 border-amber-200">
+                            <i class="fa-solid fa-sun text-amber-400 text-lg"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium">陽光戰士</span>
+                    </div>
+                    <div id="badge-6144" class="badge-locked flex flex-col items-center gap-1 cursor-default select-none">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center border-2 border-yellow-200">
+                            <i class="fa-solid fa-bolt text-yellow-500 text-lg"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium">維B1天才</span>
+                    </div>
+                    <div id="badge-7168" class="badge-locked flex flex-col items-center gap-1 cursor-default select-none">
+                        <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center border-2 border-teal-200">
+                            <i class="fa-solid fa-shield-halved text-teal-500 text-lg"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium">鋅質天才</span>
+                    </div>
+                    <div id="badge-8192" class="badge-locked flex flex-col items-center gap-1 cursor-default select-none">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center border-2 border-blue-200">
+                            <i class="fa-solid fa-water text-blue-500 text-lg"></i>
+                        </div>
+                        <span class="text-[10px] text-slate-500 font-medium">碘質天才</span>
+                    </div>
+                </div>
+
+                <!-- Dynamic Case Area -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Patient Card (dynamic) -->
+                    <div class="bg-indigo-900 text-white p-5 rounded-2xl space-y-4 shadow-xl shadow-indigo-900/20 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span id="case-tag" class="bg-indigo-700 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">任務：神秘病歷</span>
+                                <i class="fa-solid fa-file-medical text-indigo-300 text-xl"></i>
+                            </div>
+                            <img id="patient-img" src="" alt="病人" class="w-32 h-32 rounded-full object-cover mx-auto border-4 border-indigo-400 mb-3" loading="lazy" onerror="this.style.display='none'">
+                            <h3 id="case-title" class="font-bold text-lg text-indigo-200 mb-2"></h3>
+                            <p id="case-story" class="text-sm leading-relaxed text-indigo-100 bg-indigo-950/40 p-4 rounded-xl border border-indigo-700/50"></p>
+                        </div>
+                        <div class="pt-4 border-t border-indigo-700/50">
+                            <p id="case-clue" class="text-xs text-indigo-300 flex items-center gap-1"><i class="fa-solid fa-magnifying-glass"></i> </p>
+                        </div>
+                    </div>
+
+                    <!-- Diagnostic Form -->
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                            <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1"><i class="fa-solid fa-stethoscope text-indigo-600"></i> 天才醫生診斷室</h3>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1.5">1. 請判斷病人缺乏哪種營養素？</label>
+                                <select id="detective-answer" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1.5">2. 康復廚房：挑選至少 3 種可補充該營養素的食材（考慮 BMI 因素，選擇低脂低糖）</label>
+                                <div id="food-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
+                                </div>
+                            </div>
+
+                            <button onclick="submitDiagnostic()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-xl text-sm transition shadow-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i> 提交診斷與康復計畫
+                            </button>
+                        </div>
+
+                        <!-- Hint (wrong answer) -->
+                        <div id="detective-hint" class="hidden bg-amber-50 p-4 rounded-2xl border border-amber-200 animate-fade-in-up">
+                            <div class="flex items-start gap-3">
+                                <div class="bg-amber-100 text-amber-600 p-2 rounded-full shrink-0"><i class="fa-solid fa-lightbulb text-lg"></i></div>
+                                <div>
+                                    <h4 class="font-bold text-amber-900 text-sm mb-1">天才醫生，再想想！🔍</h4>
+                                    <p id="hint-text" class="text-xs text-amber-800 leading-relaxed"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feedback (correct answer) -->
+                        <div id="detective-feedback" class="hidden bg-white p-5 rounded-2xl border border-slate-200 space-y-4 animate-fade-in-up">
+                            <div class="flex items-start gap-3">
+                                <div class="bg-emerald-100 text-emerald-700 p-2 rounded-full shrink-0"><i class="fa-solid fa-circle-check text-lg"></i></div>
+                                <div class="space-y-1 flex-1">
+                                    <h4 id="feedback-headline" class="font-bold text-slate-900 text-sm"></h4>
+                                    <p id="feedback-body" class="text-xs text-slate-600 leading-relaxed"></p>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <h5 class="text-xs font-bold text-indigo-900 flex items-center gap-1 mb-2"><i class="fa-solid fa-utensils text-indigo-500"></i> AI 星級康復餐單</h5>
+                                <p id="feedback-menu" class="text-xs text-slate-600 leading-relaxed"></p>
+                            </div>
+
+                            <div class="pt-2 border-t border-slate-100">
+                                <div class="bg-blue-50 rounded-xl p-3 border border-blue-100 space-y-2">
+                                    <h5 class="text-xs font-bold text-blue-800 flex items-center gap-1"><i class="fa-solid fa-scroll text-blue-500"></i> P-I-E 冒險約章任務</h5>
+                                    <p id="feedback-pie" class="text-[11px] text-blue-700 leading-normal"></p>
+                                    <textarea placeholder="寫下你的健康約章..." class="w-full bg-white border border-blue-200 rounded-lg p-2 text-xs resize-none h-16 focus:outline-none focus:ring-2 focus:ring-blue-300 mt-1"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl text-sm font-medium shadow-2xl z-50 flex items-center gap-2 max-w-xs"></div>
+
+    <!-- Categorized Food Panel (Change 2) -->
+    <div id="food-panel" class="hidden fixed z-40 bg-white rounded-2xl shadow-2xl border border-slate-200 w-80 max-h-72 overflow-hidden">
+        <div id="fp-tabs" class="flex border-b border-slate-100 overflow-x-auto scrollbar-hide"></div>
+        <div id="fp-chips" class="p-3 overflow-y-auto max-h-52 flex flex-wrap gap-1.5"></div>
+    </div>
+
+    <footer class="bg-slate-900 text-slate-400 text-center py-4 text-xs border-t border-slate-800 flex items-center justify-center gap-4 mt-auto">
+        <span>DSE PE 營養學 — Gemini AI 分析平台 &copy; 2026</span>
+        <button onclick="resetProgress()" class="text-slate-600 hover:text-rose-400 transition text-xs underline">重置學習進度</button>
+    </footer>
+
+    <script>
+    // ─────────────────────────────────────────
+    //  DETECTIVE CASES DATA
+    // ─────────────────────────────────────────
+    const detectiveCases = {
+        1024: {
+            title: '【個案案號 #1024 的煩惱】',
+            patientImg: 'images/cases/case1024.jpg',
+            patientImgFallback: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=256&h=256&fit=crop&q=80',
+            story: '「醫生，我最近好苦惱...我是一名應屆 DSE 考生，最近忙於溫習功課，飲食非常不規律。我發現每當刷牙的時候，牙齦總是容易出血，而且上週不小心擦傷的傷口也癒合得好慢。我每天幾乎只吃快餐和麵包，幾乎不吃蔬果，請問我是怎麼了？」',
+            clueTable: '根據病人症狀，判斷缺乏哪種維生素？',
+            options: [
+                { value: 'wrong_a',  label: '維生素 A' },
+                { value: 'wrong_ca', label: '礦物質 — 鈣' },
+                { value: 'wrong_fe', label: '礦物質 — 鐵' },
+                { value: 'correct',  label: '維生素 C' }
+            ],
+            correctOption: 'correct',
+            foods: [
+                { label: '奇異果 / 柑橘類', correct: true,  img: 'https://images.unsplash.com/photo-1619600022359-91b9a6bb55b9?w=64&h=64&fit=crop' },
+                { label: '西蘭花 / 綠葉菜', correct: true,  img: 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=64&h=64&fit=crop' },
+                { label: '番茄',              correct: true,  img: 'https://images.unsplash.com/photo-1546094096-0df4bcaad337?w=64&h=64&fit=crop' },
+                { label: '炸雞薯條（高脂）',  correct: false, img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=64&h=64&fit=crop' },
+                { label: '芝士蛋糕（高糖）',  correct: false, img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=64&h=64&fit=crop' }
+            ],
+            feedback: {
+                headline: '🎉 診斷完全正確！天才醫生！',
+                body: '太棒了！維生素 C（抗壞血酸）的生理功能包括：促進傷口復原（膠原蛋白合成）、維持牙齦及牙齒健康、增強免疫力。長期缺乏維生素 C 會導致壞血病（scurvy），症狀正正包括牙齦出血及傷口癒合緩慢。',
+                menu: '鑑於病人 BMI > 25 需控制能量，為其設計「地中海輕盈維C能量餐」：前菜 — 鮮番茄奇異果油醋沙拉（零加熱，保留最多維C）；主菜 — 清蒸檸檬西蘭花配嫩雞胸（低脂高蛋白）；飯後 — 一個新鮮橙（即補維C，助鐵質吸收）。',
+                pie: '符合 WHO 青少年建議：每天累計 60 分鐘中等至劇烈強度體能活動。今日挑戰：慢跑 30 分鐘 + 拉筋 10 分鐘，幫助維持能量平衡。',
+                dalle: '"A tech-wizard defender called Guardian of Vitamin C, armor shining with glowing citrus orange energy pattern, healing an ancient cracked shield, surrounded by floating kiwi and orange crystals, cinematic lighting, epic fantasy art"'
+            },
+            hint: '嗯...仔細想想，維生素 A 主要影響視力和皮膚健康，但病人的主要問題是牙齦出血和傷口癒合慢。找找哪種維生素與「膠原蛋白合成」和「牙齦健康」有關？'
+        },
+        2048: {
+            title: '【個案案號 #2048 的煩惱】',
+            patientImg: 'images/cases/case2048.jpg',
+            patientImgFallback: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=256&h=256&fit=crop&q=80',
+            story: '「醫生，我是一名 55 歲退休教師。最近半年發現自己下肢肌肉抽筋頻率越來越高，特別是夜間睡眠時出現強烈的腿部抽痙。上月進行骨質密度檢查，報告顯示骨質密度低於正常範圍，醫生提醒我有骨質疏鬆的前兆。我年輕時很少飲奶，現在是不是太遲了？我的骨頭感覺越來越脆弱...」',
+            clueTable: '根據病人症狀，判斷缺乏哪種礦物質？',
+            options: [
+                { value: 'wrong_d',  label: '維生素 D' },
+                { value: 'wrong_fe', label: '礦物質 — 鐵' },
+                { value: 'correct',  label: '礦物質 — 鈣' },
+                { value: 'wrong_vc', label: '維生素 C' }
+            ],
+            correctOption: 'correct',
+            foods: [
+                { label: '牛奶 / 乳製品',           correct: true,  img: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=64&h=64&fit=crop' },
+                { label: '豆腐 / 黃豆製品',          correct: true,  img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=64&h=64&fit=crop' },
+                { label: '深綠色蔬菜（菠菜、西蘭花）', correct: true,  img: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=64&h=64&fit=crop' },
+                { label: '可樂汽水（磷酸阻礙吸收）',   correct: false, img: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=64&h=64&fit=crop' },
+                { label: '糖果甜品（空熱量）',         correct: false, img: 'https://images.unsplash.com/photo-1582845512747-e42001c95638?w=64&h=64&fit=crop' }
+            ],
+            feedback: {
+                headline: '🦴 診斷正確，天才醫生！',
+                body: '鈣質是骨骼及牙齒形成的核心礦物質，同時負責肌肉收縮（包括心臟）。長期鈣質攝取不足會導致骨質疏鬆症，增加骨折風險。注意：可樂中的磷酸鹽會阻礙鈣質吸收，建議減少攝取。維生素 D 能促進鈣質吸收，兩者需要配合！',
+                menu: '為病人設計「護骨強肌鈣力補充餐」：早餐 — 無糖低脂乳酪配奇異果（鈣＋維C）；午餐 — 味噌豆腐蔬菜湯配糙米飯；晚餐 — 清蒸菠菜豆腐拼無骨魚柳，搭配一杯溫熱低脂牛奶。',
+                pie: 'WHO 建議配合負重運動刺激骨骼形成，如快步行、上落樓梯、輕度負重訓練，每週至少 3 次，每次 30 分鐘。這對預防骨質疏鬆症至關重要！',
+                dalle: '"A guardian warrior of Calcium, armor made of crystalline bone-white shields and milk-white plates, standing on a mountain of dense bones, with glowing calcium molecules orbiting around, epic fantasy art, cinematic lighting"'
+            },
+            hint: '很接近了！骨骼和肌肉抽筋這類問題，哪種礦物質不只與骨骼形成有關，同時也負責肌肉收縮功能？'
+        },
+        3072: {
+            title: '【個案案號 #3072 的煩惱】',
+            patientImg: 'images/cases/case3072.jpg',
+            patientImgFallback: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=256&h=256&fit=crop&q=80',
+            story: '「醫生，我是一名 17 歲女生，正準備應考公開試。最近無論睡多長時間，每天還是提不起勁，連走上幾層樓梯都會喘不過氣。同學說我臉色蒼白，對鏡一看，連我的指甲也變得脆弱易折斷。由於我一直堅持素食，不吃肉類，我不確定問題出在哪裡。驗血結果顯示血紅蛋白值低於正常範圍...」',
+            clueTable: '根據病人症狀，判斷缺乏哪種礦物質？',
+            options: [
+                { value: 'wrong_b12', label: '維生素 B12' },
+                { value: 'wrong_ca',  label: '礦物質 — 鈣' },
+                { value: 'correct',   label: '礦物質 — 鐵' },
+                { value: 'wrong_a',   label: '維生素 A' }
+            ],
+            correctOption: 'correct',
+            foods: [
+                { label: '深綠色蔬菜（菠菜、芥蘭）', correct: true,  img: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=64&h=64&fit=crop' },
+                { label: '豆腐 / 豆類（植物性鐵）', correct: true,  img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=64&h=64&fit=crop' },
+                { label: '全穀類 / 強化鐵麥片',     correct: true,  img: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=64&h=64&fit=crop' },
+                { label: '茶 / 咖啡（阻礙鐵吸收）', correct: false, img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=64&h=64&fit=crop' },
+                { label: '汽水（磷酸阻礙代謝）',     correct: false, img: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=64&h=64&fit=crop' }
+            ],
+            feedback: {
+                headline: '🩸 天才醫生，貧血案件成功破解！',
+                body: '鐵質是形成血紅蛋白（haemoglobin）的關鍵礦物質，負責把氧氣從肺部運送到全身細胞。重要提示：植物性食物中的非血紅素鐵吸收率較低，建議配合維生素 C（如橙汁）同食以促進吸收！茶和咖啡中的單寧酸則會阻礙鐵質吸收，用餐時應避免飲用。',
+                menu: '為素食病人設計「補鐵能量餐」：早餐 — 強化鐵麥片配低脂豆奶，飯後一個橙（促進鐵吸收）；午餐 — 芥蘭豆腐糙米飯；晚餐 — 黑豆菠菜蔬菜湯，配合檸檬汁調味以助吸收。',
+                pie: '貧血期間建議低強度有氧運動，如瑜伽、輕鬆步行或水中運動，避免過度耗氧的劇烈運動。待血紅蛋白恢復後，再逐步提升運動強度至 WHO 建議的每天 60 分鐘。',
+                dalle: '"An iron warrior with deep crimson armor shaped like red blood cells carrying glowing oxygen orbs, running through a dark tunnel filled with pale mist, heroic pose, cinematic fantasy art"'
+            },
+            hint: '思路接近了！臉色蒼白和血紅蛋白低，說明血液出現問題。找找哪種礦物質是形成血液中「血紅蛋白」的重要元素？'
+        },
+        4096: {
+            title: '【個案案號 #4096 的煩惱】',
+            patientImg: 'images/cases/case4096.jpg',
+            patientImgFallback: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=256&h=256&fit=crop&q=80',
+            story: '「我的孩子今年 12 歲，最近在黃昏時分視野變得很模糊，由亮處進入暗室時需要很長時間才能適應，嚴重時甚至完全看不清楚道路。他說眼睛老是感覺乾燥，經常要用手揉眼睛。他偏食嚴重，很少吃蔬菜和水果，特別不吃橙黃色食物。體格檢查顯示結膜出現乾燥現象（乾眼症）。」',
+            clueTable: '根據病人症狀，判斷缺乏哪種維生素？',
+            options: [
+                { value: 'wrong_zn', label: '礦物質 — 鋅' },
+                { value: 'wrong_vc', label: '維生素 C' },
+                { value: 'wrong_ca', label: '礦物質 — 鈣' },
+                { value: 'correct',  label: '維生素 A' }
+            ],
+            correctOption: 'correct',
+            foods: [
+                { label: '紅蘿蔔（β-胡蘿蔔素）', correct: true,  img: 'https://images.unsplash.com/photo-1447175008436-054170c2e979?w=64&h=64&fit=crop' },
+                { label: '南瓜 / 番薯（橙黃色）', correct: true,  img: 'https://images.unsplash.com/photo-1570586437263-ab629fccc818?w=64&h=64&fit=crop' },
+                { label: '動物肝臟（豬肝）',       correct: true,  img: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=64&h=64&fit=crop' },
+                { label: '白米飯（不含維生素A）',   correct: false, img: 'https://images.unsplash.com/photo-1536304993881-ff86e0c9b77b?w=64&h=64&fit=crop' },
+                { label: '碳酸飲料（空熱量）',      correct: false, img: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=64&h=64&fit=crop' }
+            ],
+            feedback: {
+                headline: '👁️ 天才醫生，夜視案件破解！',
+                body: '維生素 A 的生理功能包括：維持正常視力（特別是夜視能力）、保持皮膚及黏膜健康（包括眼睛結膜）。植物性食物中的 β-胡蘿蔔素（橙黃色蔬菜）在人體內可轉化為維生素 A，是重要來源。缺乏維生素 A 會導致夜盲症及乾眼症。',
+                menu: '為偏食男童設計「護眼明目輕盈餐」（需讓孩子愛上橙黃色食物！）：早餐 — 全麥多士配炒蛋；午餐 — 紅蘿蔔番薯蒸糙米飯（自然甜味）；晚餐 — 南瓜豬肝湯配烚菠菜，色彩豐富讓孩子願意嘗試。',
+                pie: 'WHO 建議兒童每天至少 60 分鐘中等至劇烈體能活動。戶外活動尤佳！自然光下活動有助視力發展及眼部血液循環，減少近視風險。',
+                dalle: '"A Vision Sentinel with glowing golden eyes that see through darkness, wearing armor of orange carrot-crystal and emerald leaves, guarding an ancient lighthouse on a stormy night, epic fantasy art"'
+            },
+            hint: '很有意思的嘗試！但這個病人的主要問題是視力，特別是「夜間視力」和「眼睛乾燥」。找找哪種維生素與「視紫質合成」和「夜視能力」直接相關？'
+        },
+        5120: {
+            title: '【個案案號 #5120 的煩惱】',
+            patientImg: 'images/cases/case5120.jpg',
+            patientImgFallback: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=256&h=256&fit=crop&q=80',
+            story: '「我是一名 35 歲辦公室文職人員，長期在冷氣室內工作，極少外出。最近幾個月，我的背部和腿部肌肉時常感到無力和深層酸痛，即使沒有做劇烈運動也如此。最近去做體能測試，發現我的下肢肌力較同齡人明顯偏低。朋友建議我多曬太陽，但我真的很少有機會外出...血液維生素濃度檢測顯示嚴重不足。」',
+            clueTable: '根據病人症狀，判斷缺乏哪種維生素？',
+            options: [
+                { value: 'wrong_k',  label: '礦物質 — 鉀' },
+                { value: 'correct',  label: '維生素 D' },
+                { value: 'wrong_vc', label: '維生素 C' },
+                { value: 'wrong_fe', label: '礦物質 — 鐵' }
+            ],
+            correctOption: 'correct',
+            foods: [
+                { label: '油性魚類（三文魚、沙甸魚）', correct: true,  img: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=64&h=64&fit=crop' },
+                { label: '雞蛋（蛋黃）',               correct: true,  img: 'https://images.unsplash.com/photo-1518492104633-130d0cc84637?w=64&h=64&fit=crop' },
+                { label: '強化維D牛奶 / 乳製品',        correct: true,  img: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=64&h=64&fit=crop' },
+                { label: '糖果（不含維生素D）',          correct: false, img: 'https://images.unsplash.com/photo-1582845512747-e42001c95638?w=64&h=64&fit=crop' },
+                { label: '碳酸飲料（阻礙鈣磷代謝）',     correct: false, img: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=64&h=64&fit=crop' }
+            ],
+            feedback: {
+                headline: '☀️ 天才醫生，陽光維生素案件破解！',
+                body: '維生素 D（「陽光維生素」）可由皮膚在陽光（紫外線B）照射下自行合成，也可從飲食攝取。它的主要功能是促進腸道對鈣和磷的吸收，因此對骨骼與肌肉健康至關重要。長期缺乏會導致骨骼軟化、肌肉無力，嚴重時引起骨質疏鬆症。',
+                menu: '為室內工作者設計「陽光能量補給餐」：早餐 — 水煮蛋配全麥多士（蛋黃含維D）；午餐 — 香煎三文魚配糙米飯及清炒時蔬（三文魚是最佳維D來源）；晚餐 — 奶油南瓜濃湯（以強化維D低脂奶製作）。',
+                pie: '最重要的「食物」就是陽光！每天在上午10時至下午3時之間，讓手臂和臉部接受15–20分鐘陽光照射，配合每天60分鐘戶外體能活動（如快步行、踏單車），一舉兩得！',
+                dalle: '"A Solar Guardian warrior with radiant golden armor shaped like sunbeams and fish scales, holding a shield of crystallized vitamin D molecules, standing on a sunlit mountain peak, cinematic fantasy art"'
+            },
+            hint: '繼續加油！這位病人長期缺乏陽光，且出現骨骼和肌肉相關問題。找找哪種維生素與「鈣和磷的吸收」有關，而且可以由皮膚接觸陽光自行合成？'
+        },
+        6144: {
+            title: '【個案案號 #6144 的煩惱】',
+            patientImg: 'images/cases/case6144.jpg',
+            patientImgFallback: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=256&h=256&fit=crop&q=80',
+            story: '「醫生，我是一名 21 歲大學生，宿舍生活令我的飲食十分單調，幾乎每天只吃白米飯、即食麵和麵包。最近幾個月，我的手腳末端開始出現麻痺和刺痛感，走路時感覺雙腳無力，連爬幾層樓梯都感到困難。記憶力也明顯下降，上課時精神難以集中，晚上雖然很早入睡，但早上仍然疲憊不堪…」',
+            clueTable: '根據病人症狀，判斷缺乏哪種維生素？',
+            options: [
+                { value: 'wrong_d',  label: '維生素 D' },
+                { value: 'wrong_c',  label: '維生素 C' },
+                { value: 'correct',  label: '維生素 B1' },
+                { value: 'wrong_ca', label: '礦物質 — 鈣' }
+            ],
+            correctOption: 'correct',
+            foods: [
+                { label: '糙米 / 全麥麵包',       correct: true,  img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=64&h=64&fit=crop' },
+                { label: '豬肉 / 瘦肉',           correct: true,  img: 'https://images.unsplash.com/photo-1608039755401-742074f0548d?w=64&h=64&fit=crop' },
+                { label: '豆類 / 花生',           correct: true,  img: 'https://images.unsplash.com/photo-1515543904379-3d757afe72e4?w=64&h=64&fit=crop' },
+                { label: '白米飯（維B1含量極低）', correct: false, img: 'https://images.unsplash.com/photo-1536304993881-ff86e0c9b77b?w=64&h=64&fit=crop' },
+                { label: '即食麵（精製加工）',     correct: false, img: 'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=64&h=64&fit=crop' }
+            ],
+            feedback: {
+                headline: '⚡ 天才醫生，腳氣病案件破解！',
+                body: '維生素 B1（硫胺素 Thiamine）是能量代謝的關鍵輔酶，專門負責將碳水化合物轉化為細胞可用的能量，並維持神經系統正常運作。長期缺乏會導致腳氣病（Beriberi），症狀包括周邊神經炎（手腳麻痺）、肌肉無力及心臟功能受損。精製白米和即食麵在加工過程中已去除大部分維B1，是主要風險食物。',
+                menu: '為大學生設計「神經修復能量餐」：早餐 — 全麥麵包配花生醬（維B1豐富）；午餐 — 糙米飯配瘦豬肉炒時蔬（豬肉是最佳維B1來源）；晚餐 — 黃豆豆腐蔬菜湯配雜糧飯；避免長期只吃精製白米和即食麵。',
+                pie: 'WHO 建議每天累計 60 分鐘中等強度體能活動。腳氣病康復期間，先從低強度伸展運動和步行開始，逐步增加強度，以促進神經功能恢復和肌肉重建。'
+            },
+            hint: '這位病人的飲食以精製澱粉為主（白米、即食麵），並出現手腳麻痺和肌肉無力。找找哪種維生素B族與「能量代謝」和「神經系統功能」密切相關？'
+        },
+        7168: {
+            title: '【個案案號 #7168 的煩惱】',
+            patientImg: 'images/cases/case7168.jpg',
+            patientImgFallback: 'https://images.unsplash.com/photo-1566753323558-f4e0952af115?w=256&h=256&fit=crop&q=80',
+            story: '「醫生，我的兒子今年 14 歲，最近半年他的傷口特別難癒合，連輕微的割傷也要很長時間才能結痂。他最近還常常感冒，免疫力好像很差。最奇怪的是，他說吃飯時食物好像沒有味道，吃什麼都嚐不出香味，胃口也越來越差。他平時很少吃海鮮和肉類，主要靠白飯和蔬菜維生…」',
+            clueTable: '根據病人症狀，判斷缺乏哪種礦物質？',
+            options: [
+                { value: 'wrong_fe', label: '礦物質 — 鐵' },
+                { value: 'correct',  label: '礦物質 — 鋅' },
+                { value: 'wrong_ca', label: '礦物質 — 鈣' },
+                { value: 'wrong_vc', label: '維生素 C' }
+            ],
+            correctOption: 'correct',
+            foods: [
+                { label: '牛肉 / 羊肉',         correct: true,  img: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=64&h=64&fit=crop' },
+                { label: '蠔 / 貝殼類海鮮',     correct: true,  img: 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=64&h=64&fit=crop' },
+                { label: '南瓜子 / 堅果',       correct: true,  img: 'https://images.unsplash.com/photo-1508061942579-b9d7d0bcfe1e?w=64&h=64&fit=crop' },
+                { label: '白米飯（鋅含量低）',   correct: false, img: 'https://images.unsplash.com/photo-1536304993881-ff86e0c9b77b?w=64&h=64&fit=crop' },
+                { label: '汽水（空熱量）',       correct: false, img: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=64&h=64&fit=crop' }
+            ],
+            feedback: {
+                headline: '🛡️ 天才醫生，鋅質缺乏案件破解！',
+                body: '鋅（Zinc）是人體必需的微量礦物質，參與超過 300 種酶的活性，功能包括：促進傷口癒合、維持免疫系統正常運作、維持味覺和嗅覺功能。青少年處於快速生長期，鋅的需求量較高。植物性食物中的鋅因植酸影響而吸收率較低，純素食者需特別注意補充。動物性食物（尤其是紅肉和貝類）是最佳鋅來源。',
+                menu: '為青少年設計「免疫修復鋅力餐」：早餐 — 雜糧麵包配花生醬（植物性鋅）；午餐 — 牛肉炒時蔬配糙米飯（紅肉是最佳鋅來源）；晚餐 — 蒸蠔豉豆腐蔬菜湯（蠔含極豐富鋅質）；零食 — 南瓜子或腰果（健康鋅補充）。',
+                pie: 'WHO 建議青少年每天至少 60 分鐘中等至劇烈體能活動。戶外運動有助於改善胃口，增加飲食多樣性，從而提升包括鋅在內的多種礦物質攝取量。'
+            },
+            hint: '這位病人傷口難癒合、免疫力差、還失去味覺，這三個症狀指向同一種礦物質。找找哪種礦物質同時負責「傷口癒合」、「免疫功能」和「維持味覺」？'
+        },
+        8192: {
+            title: '【個案案號 #8192 的煩惱】',
+            patientImg: 'images/cases/case8192.jpg',
+            patientImgFallback: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=256&h=256&fit=crop&q=80',
+            story: '「醫生，我是一名 40 歲家庭主婦，居住在偏遠山區多年。最近發現頸部前方有一個明顯腫脹，摸上去軟軟的，有點像氣球。除了外觀問題之外，我還常常感到疲倦、怕冷，即使夏天也總是手腳冰冷。體重在沒有刻意節食的情況下增加了 8 公斤。我平日飲食以蔬菜和薯類為主，很少吃海鮮，山區食鹽也是自己購買的普通鹽…」',
+            clueTable: '根據病人症狀，判斷缺乏哪種礦物質？',
+            options: [
+                { value: 'wrong_fe', label: '礦物質 — 鐵' },
+                { value: 'wrong_ca', label: '礦物質 — 鈣' },
+                { value: 'wrong_d',  label: '維生素 D' },
+                { value: 'correct',  label: '礦物質 — 碘' }
+            ],
+            correctOption: 'correct',
+            foods: [
+                { label: '海帶 / 紫菜',         correct: true,  img: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?w=64&h=64&fit=crop' },
+                { label: '海魚 / 海鮮',         correct: true,  img: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=64&h=64&fit=crop' },
+                { label: '加碘鹽',              correct: true,  img: 'https://images.unsplash.com/photo-1548592673-78a4dddb9e80?w=64&h=64&fit=crop' },
+                { label: '山區蔬菜（碘含量低）', correct: false, img: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=64&h=64&fit=crop' },
+                { label: '未加碘鹽',            correct: false, img: 'https://images.unsplash.com/photo-1559181567-c3190b9f9e29?w=64&h=64&fit=crop' }
+            ],
+            feedback: {
+                headline: '🌊 天才醫生，碘質缺乏案件破解！',
+                body: '碘（Iodine）是甲狀腺激素合成的必需原料。甲狀腺激素負責調節人體的基礎代謝率、體溫、生長發育及能量利用。長期缺碘會導致甲狀腺腫大（甲狀腺腫 Goitre）——甲狀腺因過度代償而腫脹，在頸部形成明顯腫塊。症狀還包括疲倦、怕冷、體重增加和代謝緩慢。海鮮和加碘鹽是主要碘來源，偏遠山區居民因飲食缺乏海產而屬高風險群體。',
+                menu: '為山區居民設計「甲狀腺修復碘質餐」：早餐 — 紫菜蛋花湯配糙米飯（紫菜含豐富碘質）；午餐 — 海魚配加碘鹽炒時蔬；晚餐 — 海帶豆腐排骨湯；烹調時改用加碘精鹽（最簡單有效的碘補充方法）。',
+                pie: 'WHO 建議每天保持適量體能活動以改善代謝功能。甲狀腺功能恢復後，逐步增加運動量，從每天 20–30 分鐘低強度散步開始，幫助提升代謝率和改善怕冷症狀。'
+            },
+            hint: '這位病人頸部腫脹（甲狀腺腫大）、疲倦怕冷、體重增加，居住在缺乏海鮮的山區。找找哪種礦物質是「甲狀腺激素合成」的必需原料？'
+        }
+    };
+
+    // ─────────────────────────────────────────
+    //  FOOD DATABASE & MEAL STATE
+    // ─────────────────────────────────────────
+    const foodDB = [
+        // ── 穀物 / 澱粉 ──
+        { name: '白飯',     unit: '碗',  qty: 1,   kcal: 260, servingDesc: '1碗 ≈ 200g' },
+        { name: '糙米飯',   unit: '碗',  qty: 1,   kcal: 220, servingDesc: '1碗 ≈ 200g' },
+        { name: '炒飯',     unit: '份',  qty: 1,   kcal: 350, servingDesc: '1份 ≈ 200g' },
+        { name: '炒麵',     unit: '份',  qty: 1,   kcal: 300, servingDesc: '1份 ≈ 200g' },
+        { name: '炒河粉',   unit: '份',  qty: 1,   kcal: 380, servingDesc: '1份 ≈ 250g' },
+        { name: '通粉',     unit: '碗',  qty: 1,   kcal: 230, servingDesc: '1碗 ≈ 200g' },
+        { name: '意粉',     unit: '份',  qty: 1,   kcal: 280, servingDesc: '1份 ≈ 220g' },
+        { name: '米粉',     unit: '碗',  qty: 1,   kcal: 200, servingDesc: '1碗 ≈ 200g' },
+        { name: '魚蛋粉',   unit: '碗',  qty: 1,   kcal: 280, servingDesc: '1碗 ≈ 350g' },
+        { name: '粥',       unit: '碗',  qty: 1,   kcal: 120, servingDesc: '1碗 ≈ 300g' },
+        { name: '即食麵',   unit: '碗',  qty: 1,   kcal: 400, servingDesc: '1碗 ≈ 85g乾' },
+        { name: '麵包',     unit: '片',  qty: 2,   kcal: 165, servingDesc: '1片 ≈ 30g' },
+        { name: '菠蘿包',   unit: '個',  qty: 1,   kcal: 310, servingDesc: '1個 ≈ 80g' },
+        { name: '法式多士', unit: '片',  qty: 2,   kcal: 340, servingDesc: '1片 ≈ 60g' },
+        { name: '三明治',   unit: '個',  qty: 1,   kcal: 200, servingDesc: '1個 ≈ 100g' },
+        { name: '麥片',     unit: '碗',  qty: 1,   kcal: 150, servingDesc: '1碗 ≈ 40g乾' },
+        { name: '漢堡包',   unit: '個',  qty: 1,   kcal: 500, servingDesc: '1個 ≈ 200g' },
+        { name: '熱狗',     unit: '條',  qty: 1,   kcal: 250, servingDesc: '1條 ≈ 100g' },
+        { name: '薯條',     unit: '份',  qty: 1,   kcal: 320, servingDesc: '1份 ≈ 100g' },
+        { name: '薯片',     unit: '包',  qty: 1,   kcal: 150, servingDesc: '1包 ≈ 28g' },
+        { name: '叉燒包',   unit: '個',  qty: 1,   kcal: 220, servingDesc: '1個 ≈ 80g' },
+        { name: '腸粉',     unit: '份',  qty: 1,   kcal: 170, servingDesc: '1份 ≈ 150g' },
+        { name: '燒賣',     unit: '粒',  qty: 3,   kcal: 150, servingDesc: '1粒 ≈ 20g' },
+        // ── 蔬菜 ──
+        { name: '西蘭花',   unit: '份',  qty: 1,   kcal: 35,  servingDesc: '1份 ≈ 100g' },
+        { name: '菠菜',     unit: '份',  qty: 1,   kcal: 23,  servingDesc: '1份 ≈ 100g' },
+        { name: '生菜',     unit: '份',  qty: 1,   kcal: 8,   servingDesc: '1份 ≈ 50g' },
+        { name: '芥蘭',     unit: '份',  qty: 1,   kcal: 30,  servingDesc: '1份 ≈ 100g' },
+        { name: '白菜',     unit: '份',  qty: 1,   kcal: 15,  servingDesc: '1份 ≈ 100g' },
+        { name: '椰菜',     unit: '份',  qty: 1,   kcal: 22,  servingDesc: '1份 ≈ 100g' },
+        { name: '椰菜花',   unit: '份',  qty: 1,   kcal: 25,  servingDesc: '1份 ≈ 100g' },
+        { name: '青椒',     unit: '個',  qty: 1,   kcal: 20,  servingDesc: '1個 ≈ 80g' },
+        { name: '茄子',     unit: '份',  qty: 1,   kcal: 30,  servingDesc: '1份 ≈ 100g' },
+        { name: '玉米',     unit: '條',  qty: 1,   kcal: 130, servingDesc: '1條 ≈ 160g' },
+        { name: '冬菇',     unit: '份',  qty: 1,   kcal: 25,  servingDesc: '1份 ≈ 80g（鮮）' },
+        { name: '豆芽',     unit: '份',  qty: 1,   kcal: 20,  servingDesc: '1份 ≈ 100g' },
+        { name: '沙律',     unit: '份',  qty: 1,   kcal: 15,  servingDesc: '1份 ≈ 80g' },
+        { name: '紅蘿蔔',   unit: '條',  qty: 1,   kcal: 25,  servingDesc: '1條 ≈ 60g' },
+        { name: '南瓜',     unit: '份',  qty: 1,   kcal: 25,  servingDesc: '1份 ≈ 100g' },
+        { name: '番薯',     unit: '個',  qty: 1,   kcal: 115, servingDesc: '1個 ≈ 130g' },
+        { name: '番茄',     unit: '個',  qty: 1,   kcal: 20,  servingDesc: '1個 ≈ 100g' },
+        { name: '豆腐',     unit: '塊',  qty: 1,   kcal: 90,  servingDesc: '1塊 ≈ 150g' },
+        // ── 水果 ──
+        { name: '香蕉',     unit: '條',  qty: 1,   kcal: 90,  servingDesc: '1條 ≈ 100g' },
+        { name: '蘋果',     unit: '個',  qty: 1,   kcal: 80,  servingDesc: '1個 ≈ 150g' },
+        { name: '橙',       unit: '個',  qty: 1,   kcal: 60,  servingDesc: '1個 ≈ 130g' },
+        { name: '奇異果',   unit: '個',  qty: 1,   kcal: 50,  servingDesc: '1個 ≈ 80g' },
+        { name: '梨',       unit: '個',  qty: 1,   kcal: 85,  servingDesc: '1個 ≈ 150g' },
+        { name: '西瓜',     unit: '份',  qty: 1,   kcal: 45,  servingDesc: '1份 ≈ 150g' },
+        { name: '草莓',     unit: '份',  qty: 1,   kcal: 30,  servingDesc: '1份 ≈ 100g（約8粒）' },
+        { name: '葡萄',     unit: '份',  qty: 1,   kcal: 65,  servingDesc: '1份 ≈ 100g（約15粒）' },
+        { name: '芒果',     unit: '份',  qty: 1,   kcal: 100, servingDesc: '1份 ≈ 165g' },
+        { name: '木瓜',     unit: '份',  qty: 1,   kcal: 55,  servingDesc: '1份 ≈ 150g' },
+        { name: '菠蘿',     unit: '份',  qty: 1,   kcal: 50,  servingDesc: '1份 ≈ 100g' },
+        // ── 肉蛋豆 ──
+        { name: '雞翼',     unit: '隻',  qty: 2,   kcal: 340, servingDesc: '1隻 ≈ 80g' },
+        { name: '雞胸肉',   unit: '份',  qty: 1,   kcal: 165, servingDesc: '1份 ≈ 100g' },
+        { name: '叉燒',     unit: '份',  qty: 1,   kcal: 280, servingDesc: '1份 ≈ 100g' },
+        { name: '燒鴨',     unit: '份',  qty: 1,   kcal: 340, servingDesc: '1份 ≈ 100g' },
+        { name: '燒肉',     unit: '份',  qty: 1,   kcal: 380, servingDesc: '1份 ≈ 100g' },
+        { name: '豬扒',     unit: '塊',  qty: 1,   kcal: 300, servingDesc: '1塊 ≈ 130g' },
+        { name: '豬肉',     unit: '克',  qty: 100, kcal: 250, servingDesc: '100克（手掌大小）' },
+        { name: '豬肝',     unit: '份',  qty: 1,   kcal: 135, servingDesc: '1份 ≈ 100g' },
+        { name: '牛肉',     unit: '克',  qty: 100, kcal: 250, servingDesc: '100克（手掌大小）' },
+        { name: '羊肉',     unit: '克',  qty: 100, kcal: 230, servingDesc: '100克（手掌大小）' },
+        { name: '火腿',     unit: '片',  qty: 2,   kcal: 90,  servingDesc: '1片 ≈ 30g' },
+        { name: '香腸',     unit: '條',  qty: 2,   kcal: 290, servingDesc: '1條 ≈ 50g' },
+        { name: '蒸魚',     unit: '份',  qty: 1,   kcal: 150, servingDesc: '1份 ≈ 150g' },
+        { name: '三文魚',   unit: '份',  qty: 1,   kcal: 200, servingDesc: '1份 ≈ 100g' },
+        { name: '炸魚',     unit: '件',  qty: 1,   kcal: 230, servingDesc: '1件 ≈ 100g' },
+        { name: '吞拿魚',   unit: '份',  qty: 1,   kcal: 130, servingDesc: '1份罐頭 ≈ 85g' },
+        { name: '蝦',       unit: '份',  qty: 1,   kcal: 100, servingDesc: '1份 ≈ 100g' },
+        { name: '蠔',       unit: '個',  qty: 3,   kcal: 120, servingDesc: '1個 ≈ 50g' },
+        { name: '魚豆腐',   unit: '件',  qty: 3,   kcal: 120, servingDesc: '1件 ≈ 30g' },
+        { name: '雞蛋',     unit: '隻',  qty: 1,   kcal: 90,  servingDesc: '1隻 ≈ 60g' },
+        { name: '皮蛋',     unit: '個',  qty: 1,   kcal: 70,  servingDesc: '1個 ≈ 65g' },
+        // ── 奶類 ──
+        { name: '牛奶',     unit: '杯',  qty: 1,   kcal: 150, servingDesc: '1杯 ≈ 240ml' },
+        { name: '脫脂牛奶', unit: '杯',  qty: 1,   kcal: 85,  servingDesc: '1杯 ≈ 240ml' },
+        { name: '豆漿',     unit: '杯',  qty: 1,   kcal: 130, servingDesc: '1杯 ≈ 240ml' },
+        { name: '乳酪',     unit: '杯',  qty: 1,   kcal: 180, servingDesc: '1杯 ≈ 200ml' },
+        { name: '希臘乳酪', unit: '杯',  qty: 1,   kcal: 130, servingDesc: '1杯 ≈ 170g' },
+        { name: '芝士',     unit: '片',  qty: 1,   kcal: 100, servingDesc: '1片 ≈ 25g' },
+        // ── 飲料 / 小食 ──
+        { name: '可樂',     unit: '罐',  qty: 1,   kcal: 140, servingDesc: '1罐 ≈ 330ml' },
+        { name: '汽水',     unit: '罐',  qty: 1,   kcal: 140, servingDesc: '1罐 ≈ 330ml' },
+        { name: '橙汁',     unit: '杯',  qty: 1,   kcal: 110, servingDesc: '1杯 ≈ 240ml' },
+        { name: '珍珠奶茶', unit: '杯',  qty: 1,   kcal: 450, servingDesc: '1杯 ≈ 500ml' },
+        { name: '奶茶',     unit: '杯',  qty: 1,   kcal: 200, servingDesc: '1杯 ≈ 350ml' },
+        { name: '能量飲品', unit: '罐',  qty: 1,   kcal: 110, servingDesc: '1罐 ≈ 250ml' },
+        { name: '運動飲料', unit: '瓶',  qty: 1,   kcal: 90,  servingDesc: '1瓶 ≈ 500ml' },
+        { name: '咖啡',     unit: '杯',  qty: 1,   kcal: 10,  servingDesc: '1杯 ≈ 240ml（無糖）' },
+        { name: '清水',     unit: '杯',  qty: 1,   kcal: 0,   servingDesc: '1杯 ≈ 240ml' },
+        { name: '湯',       unit: '碗',  qty: 1,   kcal: 80,  servingDesc: '1碗 ≈ 250ml' },
+        { name: '雞蛋仔',   unit: '個',  qty: 1,   kcal: 300, servingDesc: '1個整份 ≈ 130g' },
+        { name: '蛋撻',     unit: '個',  qty: 1,   kcal: 230, servingDesc: '1個 ≈ 75g' },
+        { name: '蛋糕',     unit: '件',  qty: 1,   kcal: 280, servingDesc: '1件 ≈ 80g' },
+        { name: '朱古力',   unit: '塊',  qty: 1,   kcal: 160, servingDesc: '1塊 ≈ 30g' },
+        { name: '餅乾',     unit: '塊',  qty: 3,   kcal: 120, servingDesc: '1塊 ≈ 10g' },
+        { name: '雪糕',     unit: '球',  qty: 1,   kcal: 180, servingDesc: '1球 ≈ 100ml' },
+        { name: '芝麻糊',   unit: '碗',  qty: 1,   kcal: 200, servingDesc: '1碗 ≈ 250ml' },
+        { name: '花生',     unit: '份',  qty: 1,   kcal: 280, servingDesc: '1份 ≈ 50g' },
+        { name: '腰果',     unit: '份',  qty: 1,   kcal: 250, servingDesc: '1份 ≈ 50g' },
+        { name: '牛肉乾',   unit: '包',  qty: 1,   kcal: 180, servingDesc: '1包 ≈ 40g' },
+    ];
+
+    const mealData = {
+        d1: { breakfast: [], lunch: [], dinner: [], snack: [] },
+        d2: { breakfast: [], lunch: [], dinner: [], snack: [] }
+    };
+
+    // ─────────────────────────────────────────
+    //  FOOD CATEGORIES (Change 2)
+    // ─────────────────────────────────────────
+    const foodCategories = [
+        { name: '穀物/澱粉', icon: 'fa-bowl-rice',      foods: ['白飯','糙米飯','炒飯','炒麵','炒河粉','通粉','意粉','米粉','魚蛋粉','粥','即食麵','麵包','菠蘿包','法式多士','三明治','麥片','漢堡包','熱狗','薯條','叉燒包','腸粉','燒賣'] },
+        { name: '蔬菜',       icon: 'fa-leaf',            foods: ['西蘭花','菠菜','生菜','芥蘭','白菜','椰菜','椰菜花','青椒','茄子','玉米','冬菇','豆芽','沙律','紅蘿蔔','南瓜','番薯','番茄','豆腐'] },
+        { name: '水果',       icon: 'fa-apple-whole',     foods: ['香蕉','蘋果','橙','奇異果','梨','西瓜','草莓','葡萄','芒果','木瓜','菠蘿'] },
+        { name: '肉蛋豆',     icon: 'fa-drumstick-bite',  foods: ['雞翼','雞胸肉','叉燒','燒鴨','燒肉','豬扒','豬肉','豬肝','牛肉','羊肉','火腿','香腸','蒸魚','三文魚','炸魚','吞拿魚','蝦','蠔','魚豆腐','雞蛋','皮蛋'] },
+        { name: '奶類',       icon: 'fa-cow',             foods: ['牛奶','脫脂牛奶','豆漿','乳酪','希臘乳酪','芝士'] },
+        { name: '飲料/小食',  icon: 'fa-mug-saucer',      foods: ['清水','咖啡','湯','運動飲料','橙汁','奶茶','可樂','汽水','能量飲品','珍珠奶茶','雞蛋仔','蛋撻','蛋糕','朱古力','餅乾','雪糕','芝麻糊','花生','腰果','牛肉乾','薯片'] },
+    ];
+
+    // ─────────────────────────────────────────
+    //  NUTRIENT DATABASE (Change 5)
+    // ─────────────────────────────────────────
+    const nutrientDB = {
+        '白飯':   { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.14, calcium: 4,   iron: 0.4, zinc: 1.1 },
+        '糙米飯': { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.20, calcium: 20,  iron: 1.0, zinc: 1.4 },
+        '麵包':   { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.18, calcium: 50,  iron: 2.0, zinc: 0.7 },
+        '麥片':   { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.50, calcium: 52,  iron: 4.5, zinc: 2.7 },
+        '西蘭花': { vitA: 31,   vitC: 89,  vitD: 0,   vitB1: 0.07, calcium: 47,  iron: 0.7, zinc: 0.4 },
+        '菠菜':   { vitA: 469,  vitC: 28,  vitD: 0,   vitB1: 0.08, calcium: 99,  iron: 2.7, zinc: 0.5 },
+        '紅蘿蔔': { vitA: 835,  vitC: 6,   vitD: 0,   vitB1: 0.06, calcium: 33,  iron: 0.3, zinc: 0.2 },
+        '南瓜':   { vitA: 426,  vitC: 9,   vitD: 0,   vitB1: 0.05, calcium: 21,  iron: 0.5, zinc: 0.3 },
+        '番薯':   { vitA: 961,  vitC: 20,  vitD: 0,   vitB1: 0.08, calcium: 30,  iron: 0.6, zinc: 0.3 },
+        '番茄':   { vitA: 42,   vitC: 14,  vitD: 0,   vitB1: 0.04, calcium: 10,  iron: 0.3, zinc: 0.2 },
+        '豆腐':   { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.08, calcium: 138, iron: 1.8, zinc: 0.8 },
+        '生菜':   { vitA: 36,   vitC: 4,   vitD: 0,   vitB1: 0.06, calcium: 36,  iron: 1.0, zinc: 0.2 },
+        '芥蘭':   { vitA: 155,  vitC: 65,  vitD: 0,   vitB1: 0.07, calcium: 60,  iron: 1.5, zinc: 0.4 },
+        '沙律':   { vitA: 36,   vitC: 9,   vitD: 0,   vitB1: 0.05, calcium: 30,  iron: 0.8, zinc: 0.2 },
+        '橙':     { vitA: 11,   vitC: 53,  vitD: 0,   vitB1: 0.09, calcium: 40,  iron: 0.1, zinc: 0.1 },
+        '香蕉':   { vitA: 3,    vitC: 9,   vitD: 0,   vitB1: 0.03, calcium: 5,   iron: 0.3, zinc: 0.2 },
+        '奇異果': { vitA: 4,    vitC: 93,  vitD: 0,   vitB1: 0.03, calcium: 35,  iron: 0.3, zinc: 0.1 },
+        '蘋果':   { vitA: 3,    vitC: 5,   vitD: 0,   vitB1: 0.02, calcium: 6,   iron: 0.1, zinc: 0.0 },
+        '雞胸肉': { vitA: 9,    vitC: 0,   vitD: 0.1, vitB1: 0.08, calcium: 15,  iron: 1.1, zinc: 1.0 },
+        '雞翼':   { vitA: 18,   vitC: 0,   vitD: 0.1, vitB1: 0.06, calcium: 15,  iron: 1.0, zinc: 1.6 },
+        '豬扒':   { vitA: 2,    vitC: 0,   vitD: 0.5, vitB1: 0.87, calcium: 7,   iron: 0.9, zinc: 2.2 },
+        '豬肝':   { vitA: 6500, vitC: 20,  vitD: 1.1, vitB1: 0.30, calcium: 7,   iron: 18,  zinc: 4.0 },
+        '豬肉':   { vitA: 2,    vitC: 0,   vitD: 0.5, vitB1: 0.70, calcium: 7,   iron: 1.1, zinc: 2.5 },
+        '牛肉':   { vitA: 0,    vitC: 0,   vitD: 0.1, vitB1: 0.07, calcium: 7,   iron: 2.7, zinc: 4.2 },
+        '蒸魚':   { vitA: 20,   vitC: 0,   vitD: 5.0, vitB1: 0.08, calcium: 20,  iron: 0.5, zinc: 0.6 },
+        '三文魚': { vitA: 47,   vitC: 3,   vitD: 13,  vitB1: 0.23, calcium: 15,  iron: 0.3, zinc: 0.6 },
+        '炸魚':   { vitA: 15,   vitC: 0,   vitD: 3.0, vitB1: 0.06, calcium: 25,  iron: 0.6, zinc: 0.5 },
+        '雞蛋':   { vitA: 149,  vitC: 0,   vitD: 2.0, vitB1: 0.04, calcium: 56,  iron: 1.7, zinc: 1.3 },
+        '香腸':   { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.15, calcium: 10,  iron: 1.3, zinc: 1.5 },
+        '牛奶':   { vitA: 52,   vitC: 1,   vitD: 0.1, vitB1: 0.04, calcium: 120, iron: 0.0, zinc: 0.4 },
+        '乳酪':   { vitA: 26,   vitC: 0.5, vitD: 0,   vitB1: 0.04, calcium: 110, iron: 0.1, zinc: 0.5 },
+        '豆漿':   { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.04, calcium: 25,  iron: 0.6, zinc: 0.3 },
+        '芝士':   { vitA: 139,  vitC: 0,   vitD: 0.2, vitB1: 0.02, calcium: 300, iron: 0.2, zinc: 1.0 },
+        '橙汁':     { vitA: 9,    vitC: 50,  vitD: 0,   vitB1: 0.09, calcium: 11,  iron: 0.2, zinc: 0.1 },
+        '薯片':     { vitA: 0,    vitC: 10,  vitD: 0,   vitB1: 0.15, calcium: 14,  iron: 1.5, zinc: 0.5 },
+        // ── New entries ──
+        '炒河粉':   { vitA: 5,    vitC: 2,   vitD: 0,   vitB1: 0.10, calcium: 20,  iron: 1.0, zinc: 0.6 },
+        '意粉':     { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.16, calcium: 10,  iron: 1.5, zinc: 0.8 },
+        '米粉':     { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.07, calcium: 5,   iron: 0.3, zinc: 0.4 },
+        '魚蛋粉':   { vitA: 5,    vitC: 0,   vitD: 0.5, vitB1: 0.08, calcium: 30,  iron: 0.8, zinc: 0.7 },
+        '粥':       { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.04, calcium: 5,   iron: 0.3, zinc: 0.3 },
+        '即食麵':   { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.25, calcium: 10,  iron: 1.0, zinc: 0.5 },
+        '白菜':     { vitA: 50,   vitC: 45,  vitD: 0,   vitB1: 0.04, calcium: 74,  iron: 0.7, zinc: 0.3 },
+        '椰菜':     { vitA: 5,    vitC: 57,  vitD: 0,   vitB1: 0.05, calcium: 40,  iron: 0.5, zinc: 0.2 },
+        '椰菜花':   { vitA: 0,    vitC: 48,  vitD: 0,   vitB1: 0.05, calcium: 22,  iron: 0.4, zinc: 0.3 },
+        '青椒':     { vitA: 18,   vitC: 80,  vitD: 0,   vitB1: 0.06, calcium: 10,  iron: 0.4, zinc: 0.2 },
+        '茄子':     { vitA: 1,    vitC: 2,   vitD: 0,   vitB1: 0.04, calcium: 9,   iron: 0.2, zinc: 0.2 },
+        '玉米':     { vitA: 9,    vitC: 7,   vitD: 0,   vitB1: 0.20, calcium: 3,   iron: 0.5, zinc: 0.7 },
+        '冬菇':     { vitA: 0,    vitC: 2,   vitD: 1.5, vitB1: 0.05, calcium: 3,   iron: 0.5, zinc: 0.8 },
+        '豆芽':     { vitA: 0,    vitC: 14,  vitD: 0,   vitB1: 0.08, calcium: 13,  iron: 0.9, zinc: 0.4 },
+        '梨':       { vitA: 1,    vitC: 4,   vitD: 0,   vitB1: 0.01, calcium: 9,   iron: 0.2, zinc: 0.1 },
+        '西瓜':     { vitA: 28,   vitC: 8,   vitD: 0,   vitB1: 0.03, calcium: 7,   iron: 0.2, zinc: 0.1 },
+        '草莓':     { vitA: 1,    vitC: 59,  vitD: 0,   vitB1: 0.02, calcium: 16,  iron: 0.4, zinc: 0.1 },
+        '葡萄':     { vitA: 3,    vitC: 4,   vitD: 0,   vitB1: 0.07, calcium: 10,  iron: 0.4, zinc: 0.1 },
+        '芒果':     { vitA: 54,   vitC: 36,  vitD: 0,   vitB1: 0.03, calcium: 11,  iron: 0.2, zinc: 0.1 },
+        '木瓜':     { vitA: 47,   vitC: 62,  vitD: 0,   vitB1: 0.02, calcium: 20,  iron: 0.3, zinc: 0.1 },
+        '菠蘿':     { vitA: 3,    vitC: 48,  vitD: 0,   vitB1: 0.08, calcium: 13,  iron: 0.3, zinc: 0.1 },
+        '叉燒':     { vitA: 0,    vitC: 0,   vitD: 0.2, vitB1: 0.35, calcium: 10,  iron: 1.2, zinc: 2.0 },
+        '燒鴨':     { vitA: 35,   vitC: 0,   vitD: 0.2, vitB1: 0.25, calcium: 12,  iron: 2.0, zinc: 2.5 },
+        '燒肉':     { vitA: 0,    vitC: 0,   vitD: 0.3, vitB1: 0.30, calcium: 8,   iron: 1.0, zinc: 2.0 },
+        '羊肉':     { vitA: 0,    vitC: 0,   vitD: 0.1, vitB1: 0.12, calcium: 9,   iron: 1.8, zinc: 3.5 },
+        '火腿':     { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.18, calcium: 5,   iron: 0.5, zinc: 1.0 },
+        '吞拿魚':   { vitA: 15,   vitC: 0,   vitD: 4.5, vitB1: 0.25, calcium: 10,  iron: 1.0, zinc: 0.7 },
+        '蝦':       { vitA: 15,   vitC: 2,   vitD: 0.3, vitB1: 0.06, calcium: 70,  iron: 2.4, zinc: 1.3 },
+        '蠔':       { vitA: 7,    vitC: 5,   vitD: 0.5, vitB1: 0.12, calcium: 45,  iron: 6.0, zinc: 16.0 },
+        '魚豆腐':   { vitA: 0,    vitC: 0,   vitD: 0.5, vitB1: 0.05, calcium: 60,  iron: 1.0, zinc: 0.6 },
+        '皮蛋':     { vitA: 610,  vitC: 0,   vitD: 0,   vitB1: 0.04, calcium: 80,  iron: 2.5, zinc: 1.5 },
+        '脫脂牛奶': { vitA: 25,   vitC: 1,   vitD: 0.1, vitB1: 0.04, calcium: 120, iron: 0.0, zinc: 0.4 },
+        '希臘乳酪': { vitA: 35,   vitC: 0,   vitD: 0,   vitB1: 0.04, calcium: 120, iron: 0.1, zinc: 0.5 },
+        '花生':     { vitA: 0,    vitC: 0,   vitD: 0,   vitB1: 0.35, calcium: 27,  iron: 1.6, zinc: 1.5 },
+        '腰果':     { vitA: 0,    vitC: 0.5, vitD: 0,   vitB1: 0.12, calcium: 10,  iron: 1.9, zinc: 1.6 },
+    };
+
+    const dailyRef = { vitA: 800, vitC: 70, vitD: 15, vitB1: 1.2, calcium: 1000, iron: 15, zinc: 11 };
+    const nutrientLabels = { vitA: '維A(μg)', vitC: '維C(mg)', vitD: '維D(μg)', vitB1: '維B1(mg)', calcium: '鈣(mg)', iron: '鐵(mg)', zinc: '鋅(mg)' };
+    const nutrientKeys = ['vitA','vitC','vitD','vitB1','calcium','iron','zinc'];
+
+    function buildNutrientReport() {
+        const totals = { vitA: 0, vitC: 0, vitD: 0, vitB1: 0, calcium: 0, iron: 0, zinc: 0 };
+        const rows = [];
+
+        ['d1','d2'].forEach(day => {
+            ['breakfast','lunch','dinner','snack'].forEach(meal => {
+                mealData[day][meal].forEach(item => {
+                    const n = nutrientDB[item.name];
+                    if (!n) return;
+                    const mult = item.qty;
+                    const row = { name: item.name, qty: item.qty, unit: item.unit };
+                    nutrientKeys.forEach(k => {
+                        row[k] = +(n[k] * mult).toFixed(2);
+                        totals[k] = +(totals[k] + row[k]).toFixed(2);
+                    });
+                    rows.push(row);
+                });
+            });
+        });
+
+        if (rows.length === 0) {
+            document.getElementById('nutrient-table-wrap').innerHTML =
+                '<p class="text-slate-400 text-xs italic">未找到可分析的食物。請先在上方輸入你的飲食記錄。</p>';
+            return;
+        }
+
+        function cellColor(val, key) {
+            const ref = dailyRef[key] * 2;
+            const pct = ref > 0 ? val / ref : 0;
+            if (pct >= 0.5) return 'bg-emerald-100 text-emerald-800';
+            if (pct >= 0.2) return 'bg-amber-50 text-amber-800';
+            if (val > 0)    return 'bg-rose-50 text-rose-700';
+            return 'bg-slate-50 text-slate-400';
+        }
+
+        let html = `<table class="w-full text-xs border-collapse min-w-[600px]">
+            <thead>
+                <tr class="bg-slate-100">
+                    <th class="text-left px-3 py-2 font-bold text-slate-700 rounded-tl-lg">食物</th>
+                    <th class="px-2 py-2 text-slate-500 font-medium">份量</th>`;
+        nutrientKeys.forEach(k => {
+            html += `<th class="px-2 py-2 font-bold text-slate-700">${nutrientLabels[k]}</th>`;
+        });
+        html += `</tr></thead><tbody>`;
+
+        rows.forEach(row => {
+            html += `<tr class="border-b border-slate-100 hover:bg-slate-50/50">
+                <td class="px-3 py-2 font-medium text-slate-800">${row.name}</td>
+                <td class="px-2 py-2 text-center text-slate-500">${row.qty}${row.unit}</td>`;
+            nutrientKeys.forEach(k => {
+                const cls = cellColor(row[k], k);
+                html += `<td class="px-2 py-1.5 text-center rounded ${cls}">${row[k] > 0 ? row[k] : '—'}</td>`;
+            });
+            html += `</tr>`;
+        });
+
+        html += `<tr class="bg-violet-50 font-bold border-t-2 border-violet-200">
+            <td class="px-3 py-2 text-violet-800" colspan="2">兩日合計</td>`;
+        const deficiencies = [];
+        nutrientKeys.forEach(k => {
+            const pct = Math.round((totals[k] / (dailyRef[k] * 2)) * 100);
+            const cls = pct >= 100 ? 'bg-emerald-100 text-emerald-800' : pct >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-700';
+            html += `<td class="px-2 py-2 text-center ${cls}">${totals[k]}<br><span class="text-[10px] font-normal">${pct}% DRI</span></td>`;
+            if (pct < 50) deficiencies.push({ key: k, pct });
+        });
+        html += `</tr></tbody></table>`;
+
+        if (deficiencies.length > 0) {
+            html += `<div class="mt-4 flex flex-wrap gap-2">`;
+            deficiencies.forEach(d => {
+                html += `<span class="inline-flex items-center gap-1.5 bg-rose-100 text-rose-700 text-xs font-bold px-3 py-1.5 rounded-full border border-rose-200">
+                    <i class="fa-solid fa-triangle-exclamation"></i> ${nutrientLabels[d.key]} 攝取不足 (${d.pct}% DRI)
+                </span>`;
+            });
+            html += `</div><p class="mt-2 text-xs text-slate-500">DRI = 每日建議攝取量（以青少年兩日合計計算）</p>`;
+        } else {
+            html += `<p class="mt-3 text-xs text-emerald-700 font-medium flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> 所有主要維他命及礦物質均達到建議攝取量！</p>`;
+        }
+
+        document.getElementById('nutrient-table-wrap').innerHTML = html;
+        buildDietaryGuide(totals);
+    }
+
+    function initFoodPicker() {
+        // No-op: replaced by categorized food panel
+    }
+
+    function autoUnit(day, meal) {
+        const name = document.getElementById(`fi-${day}-${meal}`).value.trim();
+        const match = foodDB.find(f => f.name === name);
+        if (!match) return;
+        document.getElementById(`fq-${day}-${meal}`).value = match.qty;
+        const sel = document.getElementById(`fu-${day}-${meal}`);
+        for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].value === match.unit) { sel.selectedIndex = i; break; }
+        }
+    }
+
+    function addFoodItem(day, meal) {
+        const nameEl = document.getElementById(`fi-${day}-${meal}`);
+        const qtyEl  = document.getElementById(`fq-${day}-${meal}`);
+        const unitEl = document.getElementById(`fu-${day}-${meal}`);
+        const name = nameEl.value.trim();
+        if (!name) { nameEl.focus(); return; }
+        mealData[day][meal].push({ name, qty: parseFloat(qtyEl.value) || 1, unit: unitEl.value });
+        renderPills(day, meal);
+        nameEl.value = '';
+        qtyEl.value = '1';
+    }
+
+    function removeFoodItem(day, meal, idx) {
+        mealData[day][meal].splice(idx, 1);
+        renderPills(day, meal);
+    }
+
+    function renderPills(day, meal) {
+        const container = document.getElementById(`pills-${day}-${meal}`);
+        container.innerHTML = '';
+        mealData[day][meal].forEach((item, i) => {
+            const f = foodDB.find(fd => fd.name === item.name);
+            const pill = document.createElement('span');
+            pill.className = 'inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[11px] font-medium px-2 py-0.5 rounded-full cursor-default';
+            if (f?.servingDesc) pill.title = f.servingDesc;
+            pill.innerHTML = `${item.name} <span class="text-emerald-600">${item.qty}${item.unit}</span>
+                <button onclick="removeFoodItem('${day}','${meal}',${i})" class="text-emerald-400 hover:text-rose-500 ml-0.5 leading-none font-bold">×</button>`;
+            container.appendChild(pill);
+        });
+    }
+
+    function getMealSummary() {
+        const lines = [];
+        const dayLabels = { d1: '第一天', d2: '第二天' };
+        const mealLabels = { breakfast: '早餐', lunch: '午餐', dinner: '晚餐', snack: '小食/飲料' };
+        ['d1', 'd2'].forEach(day => {
+            ['breakfast', 'lunch', 'dinner', 'snack'].forEach(meal => {
+                const items = mealData[day][meal];
+                if (items.length > 0) {
+                    const foodStr = items.map(f => `${f.name}${f.qty}${f.unit}`).join('、');
+                    lines.push(`${dayLabels[day]}${mealLabels[meal]}：${foodStr}`);
+                }
+            });
+        });
+        return lines.length > 0 ? lines.join('\n') : '（未填寫飲食紀錄）';
+    }
+
+    function calcTotalKcal() {
+        let total = 0;
+        ['d1', 'd2'].forEach(day => {
+            ['breakfast', 'lunch', 'dinner', 'snack'].forEach(meal => {
+                mealData[day][meal].forEach(item => {
+                    const f = foodDB.find(fd => fd.name === item.name);
+                    if (f?.kcal) total += f.kcal * item.qty;
+                });
+            });
+        });
+        return Math.round(total);
+    }
+
+    // ─────────────────────────────────────────
+    //  STATE
+    // ─────────────────────────────────────────
+    const caseIds = [1024, 2048, 3072, 4096, 5120, 6144, 7168, 8192];
+    let currentCase = 1024;
+    const caseState = { 1024: 'active', 2048: 'locked', 3072: 'locked', 4096: 'locked', 5120: 'locked', 6144: 'locked', 7168: 'locked', 8192: 'locked' };
+
+    window.userProfile = { bmi: null, tdee: null };
+
+    // ─────────────────────────────────────────
+    //  TAB SWITCHING
+    // ─────────────────────────────────────────
+    function switchTab(tabNum) {
+        const tab1 = document.getElementById('tab-content-1');
+        const tab2 = document.getElementById('tab-content-2');
+        const btn1 = document.getElementById('tab-btn-1');
+        const btn2 = document.getElementById('tab-btn-2');
+        const base = 'px-3 py-1.5 rounded-lg font-semibold transition-all duration-200 text-xs sm:text-sm whitespace-nowrap';
+        if (tabNum === 1) {
+            tab1.classList.remove('hidden');
+            tab2.classList.add('hidden');
+            btn1.className = base + ' bg-white text-emerald-900 shadow';
+            btn2.className = base + ' text-emerald-100 hover:bg-white/20';
+        } else {
+            tab1.classList.add('hidden');
+            tab2.classList.remove('hidden');
+            btn2.className = base + ' bg-white text-indigo-900 shadow';
+            btn1.className = base + ' text-emerald-100 hover:bg-white/20';
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ─────────────────────────────────────────
+    //  BMI CALCULATOR
+    // ─────────────────────────────────────────
+    function calculateProfile() {
+        const h = parseFloat(document.getElementById('bmi-height').value);
+        const w = parseFloat(document.getElementById('bmi-weight').value);
+        const age = parseFloat(document.getElementById('bmi-age').value);
+        const gender = document.getElementById('bmi-gender').value;
+        const pal = parseFloat(document.getElementById('bmi-pal').value);
+
+        if (!h || !w || !age) { showToast('請填寫所有欄位', 'error'); return; }
+
+        const bmi = w / ((h / 100) ** 2);
+        let bmr;
+        if (gender === 'male') {
+            bmr = 10 * w + 6.25 * h - 5 * age + 5;
+        } else {
+            bmr = 10 * w + 6.25 * h - 5 * age - 161;
+        }
+        const tdee = Math.round(bmr * pal);
+        window.userProfile.bmi = bmi;
+        window.userProfile.tdee = tdee;
+
+        let category, catColor;
+        if (bmi < 18.5)       { category = '體重過輕'; catColor = 'text-blue-600'; }
+        else if (bmi < 23)    { category = '正常體重'; catColor = 'text-emerald-600'; }
+        else if (bmi < 25)    { category = '體重過重'; catColor = 'text-amber-600'; }
+        else                  { category = '肥胖範圍'; catColor = 'text-rose-600'; }
+
+        document.getElementById('bmi-value').textContent = bmi.toFixed(1);
+        document.getElementById('bmi-category').className = `text-xs font-bold mt-0.5 ${catColor}`;
+        document.getElementById('bmi-category').textContent = category;
+        document.getElementById('tdee-value').textContent = tdee;
+
+        let advice;
+        if (bmi >= 25) {
+            advice = `你的 BMI 超過 25，屬於體重過重。在飲食紀錄分析中，AI 將特別關注能量平衡，並提示高熱量食物的風險。`;
+        } else if (bmi < 18.5) {
+            advice = `你的體重略低。請注意確保攝取足夠的熱量和各類營養素，特別是蛋白質和礦物質。`;
+        } else {
+            advice = `你的體重在正常範圍內！維持均衡飲食和規律運動習慣，繼續保持。`;
+        }
+        document.getElementById('bmi-advice-text').textContent = advice;
+        document.getElementById('bmi-result').classList.remove('hidden');
+    }
+
+    // ─────────────────────────────────────────
+    //  TAB 1: SIMULATE ANALYSIS
+    // ─────────────────────────────────────────
+    function simulateAnalysis() {
+        const btn = document.getElementById('scan-btn');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>AI 深度掃描中...';
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles mr-2"></i>重新掃描';
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+
+            const result = document.getElementById('mirror-result');
+            result.classList.remove('hidden');
+            result.classList.add('animate-fade-in-up');
+
+            buildNutrientReport();
+
+            result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 1500);
+    }
+
+    function savePledge() {
+        showToast('✅ 你的健康生活模式約章已儲存！加油！');
+    }
+
+    // ─────────────────────────────────────────
+    //  TAB 2: CASE NAVIGATION
+    // ─────────────────────────────────────────
+    function renderCaseNav() {
+        const nav = document.getElementById('case-nav');
+        nav.innerHTML = '';
+        caseIds.forEach(id => {
+            const state = caseState[id];
+            let cls, icon;
+            if (state === 'solved') {
+                cls = 'bg-emerald-600 text-white shadow-sm shadow-emerald-600/30';
+                icon = '<i class="fa-solid fa-check mr-1.5"></i>';
+            } else if (state === 'active') {
+                cls = 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30';
+                icon = '<i class="fa-solid fa-circle-dot mr-1.5"></i>';
+            } else {
+                cls = 'bg-slate-100 text-slate-400 border border-slate-200';
+                icon = '<i class="fa-solid fa-lock mr-1.5 text-xs"></i>';
+            }
+            const btn = document.createElement('button');
+            btn.className = `shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition ${cls}`;
+            btn.innerHTML = `${icon}個案 #${id}`;
+            btn.onclick = () => loadCase(id);
+            if (state === 'locked') btn.classList.add('cursor-not-allowed', 'opacity-60');
+            nav.appendChild(btn);
+        });
+    }
+
+    function loadCase(id) {
+        if (caseState[id] === 'locked') {
+            showToast('請先完成前一個案！', 'hint');
+            return;
+        }
+        currentCase = id;
+        caseState[id] = caseState[id] === 'solved' ? 'solved' : 'active';
+        const c = detectiveCases[id];
+
+        // Animate card out
+        const card = document.querySelector('#tab-content-2 .bg-indigo-900');
+        card.style.opacity = '0';
+        card.style.transform = 'scale(0.97)';
+        card.style.transition = 'all 0.18s ease';
+
+        setTimeout(() => {
+            const patientImgEl = document.getElementById('patient-img');
+            patientImgEl.src = c.patientImg;
+            patientImgEl.onerror = () => { patientImgEl.src = c.patientImgFallback; patientImgEl.onerror = null; };
+            document.getElementById('case-title').textContent = c.title;
+            document.getElementById('case-story').innerHTML = highlightSymptoms(c.story);
+            document.getElementById('case-clue').innerHTML = `<i class="fa-solid fa-magnifying-glass"></i> ${c.clueTable}`;
+
+            // Populate dropdown
+            const sel = document.getElementById('detective-answer');
+            sel.innerHTML = '';
+            c.options.forEach(opt => {
+                const o = document.createElement('option');
+                o.value = opt.value;
+                o.textContent = opt.label;
+                sel.appendChild(o);
+            });
+
+            // Populate food grid
+            const grid = document.getElementById('food-grid');
+            grid.innerHTML = '';
+            c.foods.forEach((food, i) => {
+                const label = document.createElement('label');
+                label.className = 'flex items-center gap-2 p-2.5 bg-white border border-slate-200 rounded-xl text-xs cursor-pointer hover:bg-indigo-50 hover:border-indigo-200 transition';
+                label.innerHTML = `
+                    <input type="checkbox" class="accent-indigo-600 shrink-0 food-check" data-correct="${food.correct}">
+                    <img src="${food.img}" class="w-14 h-14 rounded-xl object-cover shrink-0" loading="lazy" onerror="this.style.display='none'">
+                    <span>${food.label}</span>`;
+                grid.appendChild(label);
+            });
+
+            // Reset feedback panels
+            document.getElementById('detective-feedback').classList.add('hidden');
+            document.getElementById('detective-hint').classList.add('hidden');
+
+            card.style.opacity = '1';
+            card.style.transform = 'scale(1)';
+        }, 180);
+
+        renderCaseNav();
+        updateProgressBar();
+    }
+
+    function highlightSymptoms(story) {
+        return story.replace(/（[^）]+）|牙齦[^，。]+|傷口[^，。]+|抽筋[^，。]+|蒼白|疲倦|指甲[^，。]+|視野[^，。]+|乾燥[^，。]+|肌肉無力[^，。]+|骨骼[^，。]+酸痛/g, match =>
+            `<span class="text-amber-300 font-bold underline decoration-wavy">${match}</span>`
+        );
+    }
+
+    // ─────────────────────────────────────────
+    //  TAB 2: SUBMIT DIAGNOSTIC
+    // ─────────────────────────────────────────
+    function submitDiagnostic() {
+        const c = detectiveCases[currentCase];
+        const selected = document.getElementById('detective-answer').value;
+        const checks = document.querySelectorAll('.food-check');
+        const correctFoodCount = Array.from(checks).filter(cb => cb.checked && cb.dataset.correct === 'true').length;
+        const wrongFoodCount = Array.from(checks).filter(cb => cb.checked && cb.dataset.correct === 'false').length;
+
+        const hint = document.getElementById('detective-hint');
+        const feedback = document.getElementById('detective-feedback');
+
+        // Wrong nutrient
+        if (selected !== c.correctOption) {
+            hint.classList.remove('hidden');
+            document.getElementById('hint-text').textContent = c.hint || '請再仔細分析，注意病人的主要症狀是什麼？';
+            feedback.classList.add('hidden');
+            hint.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            return;
+        }
+
+        // Not enough correct foods
+        if (correctFoodCount < 3) {
+            hint.classList.remove('hidden');
+            document.getElementById('hint-text').textContent = `很好，營養素診斷正確！但你需要從食物來源中選擇至少 3 種正確食材。目前只選了 ${correctFoodCount} 種正確食材，請重新選擇。`;
+            feedback.classList.add('hidden');
+            hint.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            return;
+        }
+
+        // Chose wrong foods
+        if (wrongFoodCount > 0) {
+            hint.classList.remove('hidden');
+            document.getElementById('hint-text').textContent = '注意！你選了一些不適合病人的食物（高脂或高糖）。記住病人 BMI > 25，需要選擇低脂低糖的康復食材。';
+            feedback.classList.add('hidden');
+            hint.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            return;
+        }
+
+        // All correct!
+        hint.classList.add('hidden');
+        document.getElementById('feedback-headline').textContent = c.feedback.headline;
+        document.getElementById('feedback-body').innerHTML = c.feedback.body;
+        document.getElementById('feedback-menu').innerHTML = c.feedback.menu;
+        document.getElementById('feedback-pie').textContent = c.feedback.pie;
+        feedback.classList.remove('hidden');
+        feedback.classList.add('animate-fade-in-up');
+        feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        markCaseSolved(currentCase);
+    }
+
+    // ─────────────────────────────────────────
+    //  PROGRESS & BADGES
+    // ─────────────────────────────────────────
+    function markCaseSolved(id, showToast_ = true) {
+        if (caseState[id] === 'solved') return;
+        caseState[id] = 'solved';
+
+        // Unlock next case
+        const idx = caseIds.indexOf(id);
+        if (idx < caseIds.length - 1) {
+            const nextId = caseIds[idx + 1];
+            if (caseState[nextId] === 'locked') caseState[nextId] = 'active';
+        }
+
+        // Badge
+        const badge = document.getElementById(`badge-${id}`);
+        if (badge) {
+            badge.classList.remove('badge-locked');
+            badge.classList.add('badge-unlocked');
+            badge.querySelector('div').classList.add('ring-2', 'ring-offset-2', 'ring-amber-400');
+        }
+
+        // Save
+        const saved = JSON.parse(localStorage.getItem('dse_nutrition_progress') || '{}');
+        saved[id] = 'solved';
+        localStorage.setItem('dse_nutrition_progress', JSON.stringify(saved));
+
+        renderCaseNav();
+        updateProgressBar();
+
+        const badgeNames = { 1024: '🍋 維C天才', 2048: '🦴 鈣質天才', 3072: '🩸 鐵質天才', 4096: '👁️ 維A天才', 5120: '☀️ 維D天才', 6144: '⚡ 維B1天才', 7168: '🛡️ 鋅質天才', 8192: '🌊 碘質天才' };
+        if (showToast_) showToast(`徽章解鎖：${badgeNames[id]}！`);
+    }
+
+    function updateProgressBar() {
+        const solved = caseIds.filter(id => caseState[id] === 'solved').length;
+        document.getElementById('progress-text').textContent = `${solved} / ${caseIds.length} 個案已完成`;
+        document.getElementById('progress-bar').style.width = `${(solved / caseIds.length) * 100}%`;
+    }
+
+    function loadSavedProgress() {
+        const saved = JSON.parse(localStorage.getItem('dse_nutrition_progress') || '{}');
+        Object.keys(saved).forEach(id => {
+            const numId = parseInt(id);
+            if (saved[id] === 'solved' && caseIds.includes(numId)) {
+                caseState[numId] = 'solved';
+                const idx = caseIds.indexOf(numId);
+                if (idx < caseIds.length - 1) {
+                    const nextId = caseIds[idx + 1];
+                    if (caseState[nextId] === 'locked') caseState[nextId] = 'active';
+                }
+                const badge = document.getElementById(`badge-${numId}`);
+                if (badge) {
+                    badge.classList.remove('badge-locked');
+                    badge.classList.add('badge-unlocked');
+                }
+            }
+        });
+        renderCaseNav();
+        updateProgressBar();
+        loadCase(1024);
+    }
+
+    function resetProgress() {
+        if (!confirm('確定要重置所有學習進度嗎？此操作不可還原。')) return;
+        localStorage.removeItem('dse_nutrition_progress');
+        caseIds.forEach((id, i) => { caseState[id] = i === 0 ? 'active' : 'locked'; });
+        caseIds.forEach(id => {
+            const badge = document.getElementById(`badge-${id}`);
+            if (badge) {
+                badge.classList.add('badge-locked');
+                badge.classList.remove('badge-unlocked');
+                badge.querySelector('div').classList.remove('ring-2', 'ring-offset-2', 'ring-amber-400');
+            }
+        });
+        loadCase(1024);
+        showToast('進度已重置');
+    }
+
+    // ─────────────────────────────────────────
+    //  TOAST
+    // ─────────────────────────────────────────
+    let toastTimer;
+    function showToast(msg, type = 'success') {
+        const el = document.getElementById('toast');
+        const colors = { success: 'bg-slate-900', error: 'bg-rose-700', hint: 'bg-amber-700' };
+        el.className = `fixed bottom-5 right-5 ${colors[type] || colors.success} text-white px-5 py-3 rounded-xl text-sm font-medium shadow-2xl z-50 flex items-center gap-2 max-w-xs`;
+        el.innerHTML = `<i class="fa-solid fa-star text-amber-300"></i> ${msg}`;
+        el.classList.remove('hidden');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => el.classList.add('hidden'), 3500);
+    }
+
+    // ─────────────────────────────────────────
+    //  DIETARY GUIDE DATA
+    // ─────────────────────────────────────────
+    const dietGuide = {
+        vitA:    { icon: '👁️',  name: '維生素 A',  tip: '維持視力、皮膚健康及免疫功能（缺乏可致夜盲症）',      foods: ['紅蘿蔔、南瓜（β-胡蘿蔔素豐富）', '菠菜、芥蘭等深綠色蔬菜', '豬肝（極豐富來源）', '雞蛋、牛奶'] },
+        vitC:    { icon: '🍋',  name: '維生素 C',  tip: '促進傷口癒合（膠原蛋白合成）、增強免疫力',          foods: ['奇異果（每100g含93mg）', '橙、橙汁', '西蘭花、芥蘭', '番茄'] },
+        vitD:    { icon: '☀️',  name: '維生素 D',  tip: '促進鈣質吸收，維持骨骼及肌肉健康',                foods: ['三文魚（每100g含13μg）', '蒸魚、炸魚', '雞蛋', '每天曬太陽10-15分鐘'] },
+        vitB1:   { icon: '⚡',  name: '維生素 B1', tip: '能量代謝及神經系統功能（缺乏可致腳氣病）',          foods: ['糙米飯（代替白飯）', '豬扒、豬肉（最佳來源）', '麥片', '豆類、花生'] },
+        calcium: { icon: '🦴',  name: '鈣質',      tip: '維持骨骼及牙齒強健，幫助肌肉收縮（缺乏可致骨質疏鬆）', foods: ['牛奶（每100ml含120mg）', '乳酪、芝士', '豆腐', '芥蘭、菠菜'] },
+        iron:    { icon: '🩸',  name: '鐵質',      tip: '製造血紅蛋白，輸送氧氣（缺乏可致缺鐵性貧血）',     foods: ['豬肝（每100g含18mg，最佳來源）', '牛肉', '菠菜（配維C同食助吸收）', '麥片'] },
+        zinc:    { icon: '🛡️', name: '鋅質',      tip: '促進傷口癒合、維持免疫力及味覺功能',              foods: ['牛肉（每100g含4.2mg）', '豬扒、豬肉', '麥片', '南瓜子'] },
+    };
+
+    function buildDietaryGuide(totals) {
+        const twoDay = Object.fromEntries(Object.entries(dailyRef).map(([k, v]) => [k, v * 2]));
+        const deficient = nutrientKeys.filter(k => totals[k] < twoDay[k] * 0.8);
+        const marginal  = nutrientKeys.filter(k => totals[k] >= twoDay[k] * 0.8 && totals[k] < twoDay[k]);
+
+        // Update summary banner
+        const summaryEl = document.getElementById('ai-summary-banner');
+        if (summaryEl) {
+            if (deficient.length === 0 && marginal.length === 0) {
+                summaryEl.className = 'font-bold text-emerald-700 bg-emerald-50 px-3 py-2.5 rounded-xl flex items-start gap-2';
+                summaryEl.innerHTML = '<i class="fa-solid fa-circle-check mt-0.5"></i><span>總結語：你的兩日飲食結構屬於【良好】狀態，所有營養素均達標！</span>';
+            } else if (deficient.length <= 2) {
+                summaryEl.className = 'font-bold text-amber-600 bg-amber-50 px-3 py-2.5 rounded-xl flex items-start gap-2';
+                summaryEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation mt-0.5"></i><span>總結語：飲食結構屬於【待改進】狀態，有 <strong>${deficient.length} 種</strong>營養素攝取明顯不足。</span>`;
+            } else {
+                summaryEl.className = 'font-bold text-rose-600 bg-rose-50 px-3 py-2.5 rounded-xl flex items-start gap-2';
+                summaryEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation mt-0.5"></i><span>總結語：飲食結構屬於【嚴重不足】狀態，有 <strong>${deficient.length} 種</strong>營養素攝取嚴重偏低，需要立即改善。</span>`;
+            }
+        }
+
+        // Update micronutrient warning
+        const warningEl = document.getElementById('ai-nutrient-warning');
+        if (warningEl) {
+            if (deficient.length === 0) {
+                warningEl.innerHTML = '<p class="font-bold text-emerald-700 text-xs mb-1.5 flex items-center gap-1"><i class="fa-solid fa-flask text-emerald-500"></i> 微量元素檢查</p><p class="text-xs text-emerald-800">所有分析到的營養素攝取量均達兩日目標，飲食多樣性良好！</p>';
+                warningEl.className = 'bg-emerald-50 rounded-xl p-3 border border-emerald-100';
+            } else {
+                const names = deficient.map(k => `<strong>${dietGuide[k].name}</strong>`).join('、');
+                warningEl.innerHTML = `<p class="font-bold text-rose-700 text-xs mb-1.5 flex items-center gap-1"><i class="fa-solid fa-flask text-rose-500"></i> 微量元素警訊</p><p class="text-xs text-rose-800">根據你的飲食紀錄，以下營養素攝取嚴重不足：${names}。請參考下方「建議飲食方針」補充。</p>`;
+                warningEl.className = 'bg-rose-50 rounded-xl p-3 border border-rose-100';
+            }
+        }
+
+        // Update action items dynamically
+        const actionsEl = document.getElementById('ai-action-items');
+        if (actionsEl) {
+            const actions = [];
+            if (deficient.includes('vitC') || marginal.includes('vitC'))
+                actions.push('多吃新鮮水果（奇異果、橙），每天至少兩份，補充維生素 C。');
+            if (deficient.includes('calcium') || marginal.includes('calcium'))
+                actions.push('每天飲用 1–2 杯牛奶或豆漿，或選擇高鈣食物如豆腐、芝士。');
+            if (deficient.includes('iron') || marginal.includes('iron'))
+                actions.push('多選擇紅肉（豬肝、牛肉）並配合維生素 C 食物同吃，提升鐵質吸收率。');
+            if (deficient.includes('vitD') || marginal.includes('vitD'))
+                actions.push('多吃三文魚等深海魚類，並每天在陽光下步行 10–15 分鐘合成維生素 D。');
+            if (deficient.includes('vitA') || marginal.includes('vitA'))
+                actions.push('每餐加入橙黃色蔬菜（紅蘿蔔、番薯），補充維生素 A 保護視力。');
+            if (deficient.includes('vitB1') || marginal.includes('vitB1'))
+                actions.push('以糙米飯或全麥麵包代替白飯，並增加豬肉攝取，補充維生素 B1。');
+            if (deficient.includes('zinc') || marginal.includes('zinc'))
+                actions.push('增加牛肉、豬扒的攝取量，補充鋅質增強免疫力。');
+            actions.push('每天飲用 6–8 杯清水，減少含糖飲料，保持充足水分。');
+            actions.push('<strong>連動挑戰：</strong>今天增加 30 分鐘中等強度體能活動（如快步行走、游泳）！');
+            actionsEl.innerHTML = actions.map(a =>
+                `<li class="flex items-start gap-2"><i class="fa-solid fa-circle-check text-emerald-500 mt-0.5 shrink-0"></i><span>${a}</span></li>`
+            ).join('');
+        }
+
+        // Build dietary guide cards for deficient/marginal nutrients
+        const guideEl   = document.getElementById('ai-diet-guide');
+        const contentEl = document.getElementById('ai-diet-guide-content');
+        if (!guideEl || !contentEl) return;
+        const toShow = [...deficient, ...marginal];
+        if (toShow.length === 0) { guideEl.classList.add('hidden'); return; }
+
+        guideEl.classList.remove('hidden');
+        contentEl.innerHTML = toShow.map(k => {
+            const g   = dietGuide[k];
+            const pct = Math.min(Math.round((totals[k] / twoDay[k]) * 100), 100);
+            const isDeficient = deficient.includes(k);
+            const badge = isDeficient
+                ? '<span class="bg-rose-100 text-rose-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1.5">嚴重不足</span>'
+                : '<span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full ml-1.5">略有不足</span>';
+            const barColor = isDeficient ? 'bg-rose-400' : 'bg-amber-400';
+            return `
+                <div class="bg-white rounded-xl border border-indigo-100 p-3 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-indigo-900">${g.icon} ${g.name}${badge}</span>
+                        <span class="text-[11px] text-slate-400">兩日目標 ${pct}%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bar-fill h-full ${barColor} rounded-full" style="width:${pct}%"></div>
+                    </div>
+                    <p class="text-[11px] text-slate-500">${g.tip}</p>
+                    <div class="flex flex-wrap gap-1.5 pt-0.5">
+                        ${g.foods.map(f => `<span class="bg-emerald-50 text-emerald-800 text-[11px] px-2 py-0.5 rounded-full border border-emerald-100">✓ ${f}</span>`).join('')}
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+
+    // ─────────────────────────────────────────
+    //  FOOD PANEL (Change 2)
+    // ─────────────────────────────────────────
+    let activeMeal = { day: null, meal: null };
+    let activeCatIdx = 0;
+
+    function showFoodPanel(day, meal) {
+        activeMeal = { day, meal };
+        const input = document.getElementById(`fi-${day}-${meal}`);
+        const rect = input.getBoundingClientRect();
+        const panel = document.getElementById('food-panel');
+        const panelWidth = Math.min(320, window.innerWidth - 8);
+        panel.style.width = panelWidth + 'px';
+        const left = Math.min(rect.left, window.innerWidth - panelWidth - 4);
+        panel.style.top  = (rect.bottom + 4) + 'px';
+        panel.style.left = Math.max(4, left) + 'px';
+        panel.classList.remove('hidden');
+        renderFoodPanelTabs();
+        renderFoodPanelChips(activeCatIdx);
+    }
+
+    function hideFoodPanel() {
+        document.getElementById('food-panel').classList.add('hidden');
+    }
+
+    function renderFoodPanelTabs() {
+        const tabsEl = document.getElementById('fp-tabs');
+        tabsEl.innerHTML = '';
+        foodCategories.forEach((cat, idx) => {
+            const btn = document.createElement('button');
+            btn.className = idx === activeCatIdx
+                ? 'px-3 py-2 text-xs font-bold text-emerald-700 border-b-2 border-emerald-500 bg-emerald-50 shrink-0 flex items-center gap-1 transition'
+                : 'px-3 py-2 text-xs text-slate-500 hover:text-slate-700 hover:bg-slate-50 shrink-0 flex items-center gap-1 transition';
+            btn.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.name}`;
+            btn.onmousedown = (e) => { e.preventDefault(); setFoodPanelCategory(idx); };
+            tabsEl.appendChild(btn);
+        });
+    }
+
+    function setFoodPanelCategory(idx) {
+        activeCatIdx = idx;
+        renderFoodPanelTabs();
+        renderFoodPanelChips(idx);
+    }
+
+    function calTierBadge(kcal) {
+        if (kcal === 0) return '<span class="text-[9px] font-bold text-slate-400 bg-slate-100 px-1 py-0.5 rounded">零卡</span>';
+        if (kcal < 100)  return '<span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded">低卡</span>';
+        if (kcal < 300)  return '<span class="text-[9px] font-bold text-amber-700 bg-amber-50 px-1 py-0.5 rounded">中卡</span>';
+        return '<span class="text-[9px] font-bold text-rose-700 bg-rose-50 px-1 py-0.5 rounded">高卡</span>';
+    }
+
+    function renderFoodPanelChips(idx) {
+        const cat = foodCategories[idx];
+        const chipsEl = document.getElementById('fp-chips');
+        chipsEl.innerHTML = '';
+        cat.foods.forEach(foodName => {
+            const f = foodDB.find(fd => fd.name === foodName);
+            const chip = document.createElement('button');
+            chip.className = 'flex flex-col items-start bg-slate-50 hover:bg-emerald-50 hover:border-emerald-300 border border-slate-200 rounded-xl px-2.5 py-1.5 transition min-w-[80px] text-left gap-0.5';
+            chip.innerHTML = `
+                <div class="flex items-center gap-1 flex-wrap">
+                    <span class="text-xs font-bold text-slate-700">${foodName}</span>
+                    ${f?.kcal != null ? calTierBadge(f.kcal) : ''}
+                </div>
+                <span class="text-[10px] text-slate-400 leading-tight">${f?.kcal != null ? f.kcal + ' kcal' : ''}${f?.servingDesc ? ' · ' + f.servingDesc : ''}</span>`;
+            chip.onmousedown = (e) => { e.preventDefault(); selectFoodChip(foodName); };
+            chipsEl.appendChild(chip);
+        });
+    }
+
+    function selectFoodChip(name) {
+        const { day, meal } = activeMeal;
+        if (!day || !meal) return;
+        const f = foodDB.find(fd => fd.name === name);
+        const nameEl = document.getElementById(`fi-${day}-${meal}`);
+        const qtyEl  = document.getElementById(`fq-${day}-${meal}`);
+        const unitEl = document.getElementById(`fu-${day}-${meal}`);
+        nameEl.value = name;
+        if (f) {
+            qtyEl.value = f.qty;
+            for (let i = 0; i < unitEl.options.length; i++) {
+                if (unitEl.options[i].textContent === f.unit) { unitEl.selectedIndex = i; break; }
+            }
+        }
+        hideFoodPanel();
+        addFoodItem(day, meal);
+    }
+
+    document.addEventListener('click', function(e) {
+        const panel = document.getElementById('food-panel');
+        if (!panel.classList.contains('hidden')) {
+            const isInput = e.target.id && e.target.id.startsWith('fi-');
+            if (!panel.contains(e.target) && !isInput) hideFoodPanel();
+        }
+    });
+
+    // ─────────────────────────────────────────
+    //  PHOTO CAPTURE (Change 4)
+    // ─────────────────────────────────────────
+    const mealPhotos = {};
+
+    function triggerPhoto(day, meal) {
+        if (navigator.mediaDevices?.getUserMedia) {
+            openCameraModal(day, meal);
+        } else {
+            document.getElementById(`photo-${day}-${meal}`).click();
+        }
+    }
+
+    function handlePhoto(day, meal, input) {
+        const file = input.files[0];
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        mealPhotos[`${day}-${meal}`] = url;
+        const preview = document.getElementById(`photo-preview-${day}-${meal}`);
+        buildPhotoPreviewHTML(day, meal, url, preview, file);
+    }
+
+    function clearPhoto(day, meal) {
+        document.getElementById(`photo-preview-${day}-${meal}`).classList.add('hidden');
+        document.getElementById(`photo-${day}-${meal}`).value = '';
+        delete mealPhotos[`${day}-${meal}`];
+    }
+
+    function copyPhotoPrompt(el) {
+        navigator.clipboard.writeText(el.textContent.trim())
+            .then(() => showToast('✅ Gemini Prompt 已複製！'))
+            .catch(() => { el.select?.(); document.execCommand('copy'); showToast('✅ Gemini Prompt 已複製！'); });
+    }
+
+    // ─────────────────────────────────────────
+    //  GEMINI API SETTINGS
+    // ─────────────────────────────────────────
+    function openApiSettings() {
+        document.getElementById('gemini-key-input').value = localStorage.getItem('gemini_api_key') || '';
+        document.getElementById('api-modal').classList.remove('hidden');
+    }
+    function saveApiKey() {
+        const k = document.getElementById('gemini-key-input').value.trim();
+        k ? localStorage.setItem('gemini_api_key', k) : localStorage.removeItem('gemini_api_key');
+        document.getElementById('api-modal').classList.add('hidden');
+        showToast(k ? '✅ API Key 已儲存！拍照即可使用 Gemini 分析。' : '🗑️ API Key 已清除。');
+    }
+    function closeApiSettings() { document.getElementById('api-modal').classList.add('hidden'); }
+
+    // ─────────────────────────────────────────
+    //  GEMINI VISION PHOTO ANALYSIS
+    // ─────────────────────────────────────────
+    const GEMINI_API_KEY = '';
+
+    async function analyzePhotoWithGemini(day, meal, file, previewEl) {
+        const apiKey = localStorage.getItem('gemini_api_key') || GEMINI_API_KEY;
+        const resultEl = previewEl.querySelector('.gemini-result');
+        if (!apiKey) return;
+        resultEl.innerHTML = '<p class="text-xs text-slate-400 flex items-center gap-1 mt-2"><i class="fa-solid fa-spinner fa-spin"></i> Gemini 分析中...</p>';
+        try {
+            const base64 = await fileToBase64(file);
+            const prompt = '你是一位營養師。分析這張食物照片，以JSON格式回覆（只回覆JSON，不要其他文字）：{"foods":[{"name":"繁體中文食物名稱","qty":數字,"unit":"單位"},…]}';
+            const res = await fetch(
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+                { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                      contents: [{ parts: [
+                          { text: prompt },
+                          { inlineData: { mimeType: file.type || 'image/jpeg', data: base64 } }
+                      ]}],
+                      generationConfig: { responseMimeType: 'application/json' }
+                  }) }
+            );
+            const data = await res.json();
+            if (data.error) throw new Error(data.error.message);
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+            const json = JSON.parse(text.replace(/```json|```/g, '').trim());
+            displayGeminiResult(day, meal, json.foods, resultEl);
+        } catch(e) {
+            resultEl.innerHTML = '<p class="text-xs text-rose-500 mt-2"><i class="fa-solid fa-triangle-exclamation mr-1"></i>分析失敗，請檢查 API Key 或網絡連接。</p>';
+        }
+    }
+
+    function fileToBase64(file) {
+        return new Promise(r => {
+            const fr = new FileReader();
+            fr.onload = e => r(e.target.result.split(',')[1]);
+            fr.readAsDataURL(file);
+        });
+    }
+
+    function displayGeminiResult(day, meal, foods, el) {
+        if (!foods?.length) { el.innerHTML = '<p class="text-xs text-slate-400 mt-2">未能識別食物。</p>'; return; }
+        let html = '<div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100 mt-2">';
+        html += '<p class="text-xs font-bold text-emerald-800 mb-2"><i class="fa-solid fa-robot mr-1"></i>Gemini 識別結果：</p>';
+        html += '<div class="flex flex-wrap gap-1.5 mb-2">';
+        foods.forEach(f => { html += `<span class="text-xs bg-white border border-emerald-200 rounded-full px-2 py-0.5">${f.name} ${f.qty}${f.unit}</span>`; });
+        html += `</div><button onmousedown='addGeminiFoods(${JSON.stringify(foods).replace(/'/g,"&#39;")},"${day}","${meal}")' class="text-xs bg-emerald-600 text-white px-3 py-1 rounded-lg font-bold hover:bg-emerald-700 transition"><i class="fa-solid fa-plus mr-1"></i>全部加入此餐</button></div>`;
+        el.innerHTML = html;
+    }
+
+    function addGeminiFoods(foods, day, meal) {
+        foods.forEach(f => { mealData[day][meal].push({ name: f.name, qty: f.qty || 1, unit: f.unit || '份' }); });
+        renderPills(day, meal);
+        showToast(`✅ 已從 Gemini 加入 ${foods.length} 種食物！`);
+    }
+
+    // ─────────────────────────────────────────
+    //  LIVE CAMERA
+    // ─────────────────────────────────────────
+    let cameraTargetDay = null, cameraTargetMeal = null;
+
+    async function openCameraModal(day, meal) {
+        cameraTargetDay = day;
+        cameraTargetMeal = meal;
+        document.getElementById('camera-modal').classList.remove('hidden');
+        await startLiveCamera();
+    }
+
+    async function startLiveCamera() {
+        const video = document.getElementById('camera-video');
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' }, audio: false
+            });
+            video.srcObject = stream;
+        } catch(e) {
+            closeCameraModal();
+            document.getElementById(`photo-${cameraTargetDay}-${cameraTargetMeal}`).click();
+        }
+    }
+
+    function closeCameraModal() {
+        const video = document.getElementById('camera-video');
+        if (video.srcObject) { video.srcObject.getTracks().forEach(t => t.stop()); video.srcObject = null; }
+        document.getElementById('camera-modal').classList.add('hidden');
+    }
+
+    function captureFromCamera() {
+        const video = document.getElementById('camera-video');
+        const canvas = document.getElementById('camera-canvas');
+        const maxDim = 800;
+        let w = video.videoWidth || 640, h = video.videoHeight || 480;
+        if (w > maxDim) { h = Math.round((maxDim / w) * h); w = maxDim; }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(video, 0, 0, w, h);
+        closeCameraModal();
+        canvas.toBlob(blob => {
+            const file = new File([blob], 'camera.jpg', { type: 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
+            const day = cameraTargetDay, meal = cameraTargetMeal;
+            mealPhotos[`${day}-${meal}`] = url;
+            const preview = document.getElementById(`photo-preview-${day}-${meal}`);
+            buildPhotoPreviewHTML(day, meal, url, preview, file);
+        }, 'image/jpeg', 0.85);
+    }
+
+    function buildPhotoPreviewHTML(day, meal, url, preview, file) {
+        const hasKey = !!(localStorage.getItem('gemini_api_key') || GEMINI_API_KEY);
+        preview.innerHTML = `
+            <div class="relative">
+                <img src="${url}" class="w-full max-h-32 rounded-xl object-cover border border-slate-200">
+                <button onmousedown="clearPhoto('${day}','${meal}')" class="absolute top-1 right-1 bg-white rounded-full w-5 h-5 text-xs text-slate-500 hover:text-rose-500 shadow flex items-center justify-center font-bold">×</button>
+            </div>
+            <div class="gemini-result"></div>`;
+        preview.classList.remove('hidden');
+        if (hasKey) analyzePhotoWithGemini(day, meal, file, preview);
+    }
+
+    // ─────────────────────────────────────────
+    //  INIT
+    // ─────────────────────────────────────────
+    loadSavedProgress();
+    initFoodPicker();
+</script>
+
+<div id="camera-modal" class="hidden fixed inset-0 bg-black/90 flex flex-col items-center justify-center z-50 p-4">
+    <div class="w-full max-w-lg space-y-3">
+        <div class="relative bg-black rounded-2xl overflow-hidden" style="aspect-ratio:4/3">
+            <video id="camera-video" autoplay playsinline class="w-full h-full object-cover"></video>
+            <canvas id="camera-canvas" class="hidden"></canvas>
+            <div class="absolute top-2 left-2 bg-black/50 text-emerald-400 text-[11px] px-2 py-0.5 rounded-full flex items-center gap-1">
+                <i class="fa-solid fa-circle animate-pulse text-[8px]"></i> 即時預覽
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="closeCameraModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition flex-1">取消</button>
+            <button onclick="document.getElementById('photo-'+cameraTargetDay+'-'+cameraTargetMeal).click()" class="bg-slate-600 hover:bg-slate-500 text-white px-4 py-2.5 rounded-xl text-sm font-bold transition flex-1 flex items-center justify-center gap-1">
+                <i class="fa-solid fa-images"></i> 相簿
+            </button>
+            <button onclick="captureFromCamera()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition flex-1 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-circle-dot"></i> 拍照
+            </button>
+        </div>
+        <p class="text-center text-xs text-slate-400">點擊「拍照」擷取畫面並進行 AI 分析</p>
+    </div>
+</div>
+
+<div id="api-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl p-6 space-y-3">
+        <h3 class="font-bold text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-key text-amber-500"></i> Gemini API 設定
+        </h3>
+        <p class="text-xs text-slate-500">輸入你的 Gemini API Key，啟用照片 AI 即時分析功能。<br>Key 只儲存在本機瀏覽器，不會上傳至任何伺服器。</p>
+        <input id="gemini-key-input" type="password" placeholder="AIza..." class="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400">
+        <div class="flex gap-2">
+            <button onclick="saveApiKey()" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-sm font-bold py-2 rounded-xl transition">儲存</button>
+            <button onclick="closeApiSettings()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-bold py-2 rounded-xl transition">取消</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

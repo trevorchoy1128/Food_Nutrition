@@ -2,7 +2,7 @@
 <html lang="zh-Hant" style="overflow-x:hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>DSE 體育：健康鏡子與天才醫生學院</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,6 +22,54 @@
         details > summary { list-style: none; }
         details > summary::-webkit-details-marker { display: none; }
         .bar-fill { transition: width 0.8s ease-out; }
+        /* Prevent iOS input auto-zoom: font-size must be >= 16px */
+        @media (max-width: 767px) {
+            input[type="text"], input[type="number"], select, textarea {
+                font-size: 16px !important;
+            }
+        }
+        /* Safe area insets for notched devices (iPhone 16 Pro Max etc.) */
+        footer {
+            padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));
+        }
+        #toast {
+            bottom: max(1.25rem, calc(env(safe-area-inset-bottom, 0px) + 0.75rem)) !important;
+            right: 0.75rem !important;
+            max-width: calc(100vw - 1.5rem);
+        }
+        /* Details arrow open/close animation */
+        .details-arrow { transition: transform 0.2s ease; display: inline-block; }
+        details[open] .details-arrow { transform: rotate(180deg); }
+        /* Food panel overlay for mobile bottom sheet */
+        #food-panel-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 39;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Mobile bottom sheet styles */
+        #food-panel.mobile-sheet {
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            top: auto !important;
+            width: 100% !important;
+            max-height: 55vh !important;
+            border-radius: 1.25rem 1.25rem 0 0 !important;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            display: flex !important;
+            flex-direction: column;
+        }
+        #food-panel.mobile-sheet #fp-chips {
+            max-height: none !important;
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        /* Ensure hidden overrides mobile-sheet */
+        #food-panel[style*="display: none"] { display: none !important; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans">
@@ -572,7 +620,12 @@
     <div id="toast" class="hidden fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl text-sm font-medium shadow-2xl z-50 flex items-center gap-2 max-w-xs"></div>
 
     <!-- Categorized Food Panel (Change 2) -->
-    <div id="food-panel" class="hidden fixed z-40 bg-white rounded-2xl shadow-2xl border border-slate-200 w-80 max-h-72 overflow-hidden">
+    <div id="food-panel-overlay" onclick="hideFoodPanel()"></div>
+    <div id="food-panel" style="display:none" class="fixed z-40 bg-white rounded-2xl shadow-2xl border border-slate-200 w-80 max-h-72 overflow-hidden">
+        <div id="fp-mobile-header" class="hidden items-center justify-between px-4 py-2.5 border-b border-slate-200 bg-slate-50">
+            <span class="text-sm font-bold text-slate-700">選擇食物</span>
+            <button onclick="hideFoodPanel()" class="w-7 h-7 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 font-bold text-lg leading-none">×</button>
+        </div>
         <div id="fp-tabs" class="flex border-b border-slate-100 overflow-x-auto scrollbar-hide"></div>
         <div id="fp-chips" class="p-3 overflow-y-auto max-h-52 flex flex-wrap gap-1.5"></div>
     </div>
@@ -1643,32 +1696,70 @@
     function showFoodPanel(day, meal) {
         activeMeal = { day, meal };
         const input = document.getElementById(`fi-${day}-${meal}`);
-        const rect = input.getBoundingClientRect();
         const panel = document.getElementById('food-panel');
-        const panelWidth = Math.min(320, window.innerWidth - 8);
-        panel.style.width = panelWidth + 'px';
-        const left = Math.min(rect.left, window.innerWidth - panelWidth - 4);
-        panel.style.top  = (rect.bottom + 4) + 'px';
-        panel.style.left = Math.max(4, left) + 'px';
-        panel.classList.remove('hidden');
+        const overlay = document.getElementById('food-panel-overlay');
+        const mobileHeader = document.getElementById('fp-mobile-header');
+        const isMobile = window.innerWidth < 768;
+
+        if (isMobile) {
+            // Mobile: full-width bottom sheet above keyboard
+            panel.classList.add('mobile-sheet');
+            panel.style.removeProperty('width');
+            panel.style.removeProperty('left');
+            panel.style.removeProperty('top');
+            mobileHeader.style.display = 'flex';
+            overlay.style.display = 'block';
+        } else {
+            // Desktop: smart-positioned dropdown
+            panel.classList.remove('mobile-sheet');
+            mobileHeader.style.display = 'none';
+            overlay.style.display = 'none';
+            const rect = input.getBoundingClientRect();
+            const panelWidth = Math.min(320, window.innerWidth - 8);
+            const panelHeight = 288;
+            panel.style.width = panelWidth + 'px';
+            panel.style.removeProperty('max-height');
+            const left = Math.max(4, Math.min(rect.left, window.innerWidth - panelWidth - 4));
+            panel.style.left = left + 'px';
+            panel.style.right = 'auto';
+            panel.style.bottom = 'auto';
+            // Position above input if not enough space below
+            if (rect.bottom + 4 + panelHeight > window.innerHeight) {
+                panel.style.top = Math.max(4, rect.top - panelHeight - 4) + 'px';
+            } else {
+                panel.style.top = (rect.bottom + 4) + 'px';
+            }
+        }
+
+        panel.style.display = isMobile ? 'flex' : 'block';
+        panel.style.flexDirection = isMobile ? 'column' : '';
         renderFoodPanelTabs();
         renderFoodPanelChips(activeCatIdx);
     }
 
     function hideFoodPanel() {
-        document.getElementById('food-panel').classList.add('hidden');
+        const panel = document.getElementById('food-panel');
+        panel.style.display = 'none';
+        panel.classList.remove('mobile-sheet');
+        const overlay = document.getElementById('food-panel-overlay');
+        if (overlay) overlay.style.display = 'none';
     }
 
     function renderFoodPanelTabs() {
         const tabsEl = document.getElementById('fp-tabs');
         tabsEl.innerHTML = '';
+        const isMobile = window.innerWidth < 768;
         foodCategories.forEach((cat, idx) => {
             const btn = document.createElement('button');
             btn.className = idx === activeCatIdx
                 ? 'px-3 py-2 text-xs font-bold text-emerald-700 border-b-2 border-emerald-500 bg-emerald-50 shrink-0 flex items-center gap-1 transition'
                 : 'px-3 py-2 text-xs text-slate-500 hover:text-slate-700 hover:bg-slate-50 shrink-0 flex items-center gap-1 transition';
             btn.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.name}`;
-            btn.onmousedown = (e) => { e.preventDefault(); setFoodPanelCategory(idx); };
+            if (isMobile) {
+                btn.addEventListener('touchend', (e) => { e.preventDefault(); setFoodPanelCategory(idx); });
+            } else {
+                btn.onmousedown = (e) => { e.preventDefault(); setFoodPanelCategory(idx); };
+            }
             tabsEl.appendChild(btn);
         });
     }
@@ -1690,6 +1781,7 @@
         const cat = foodCategories[idx];
         const chipsEl = document.getElementById('fp-chips');
         chipsEl.innerHTML = '';
+        const isMobile = window.innerWidth < 768;
         cat.foods.forEach(foodName => {
             const f = foodDB.find(fd => fd.name === foodName);
             const chip = document.createElement('button');
@@ -1700,7 +1792,11 @@
                     ${f?.kcal != null ? calTierBadge(f.kcal) : ''}
                 </div>
                 <span class="text-[10px] text-slate-400 leading-tight">${f?.kcal != null ? f.kcal + ' kcal' : ''}${f?.servingDesc ? ' · ' + f.servingDesc : ''}</span>`;
-            chip.onmousedown = (e) => { e.preventDefault(); selectFoodChip(foodName); };
+            if (isMobile) {
+                chip.addEventListener('touchend', (e) => { e.preventDefault(); selectFoodChip(foodName); });
+            } else {
+                chip.onmousedown = (e) => { e.preventDefault(); selectFoodChip(foodName); };
+            }
             chipsEl.appendChild(chip);
         });
     }
@@ -1725,11 +1821,19 @@
 
     document.addEventListener('click', function(e) {
         const panel = document.getElementById('food-panel');
-        if (!panel.classList.contains('hidden')) {
+        if (panel.style.display !== 'none') {
             const isInput = e.target.id && e.target.id.startsWith('fi-');
             if (!panel.contains(e.target) && !isInput) hideFoodPanel();
         }
     });
+
+    // On desktop, hide food panel when page is scrolled (panel doesn't follow scroll)
+    window.addEventListener('scroll', function() {
+        const panel = document.getElementById('food-panel');
+        if (panel.style.display !== 'none' && window.innerWidth >= 768) {
+            hideFoodPanel();
+        }
+    }, { passive: true });
 
     // ─────────────────────────────────────────
     //  PHOTO CAPTURE (Change 4)
